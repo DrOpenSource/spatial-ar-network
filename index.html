@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Living Landmarks | Spatial AR</title>
+  <link rel="stylesheet" href="./src/style.css" />
+
+  <!-- Three.js and MindAR WebAR Library (Zero Native Install Required) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
+</head>
+<body>
+  <!-- AR Viewport Container -->
+  <div id="ar-container"></div>
+
+  <!-- Glassmorphic HUD & User Guidance Overlay -->
+  <div id="ui-overlay">
+    <!-- Top Status Bar -->
+    <header class="hud-header">
+      <div class="hud-badge live-indicator">
+        <span class="pulse-dot"></span> LIVE AR
+      </div>
+      <div class="hud-title" id="landmark-name">DELHI CYBERHUB PORTAL</div>
+      <div class="hud-badge battery-indicator" id="tracking-status">SEARCHING MARKER</div>
+    </header>
+
+    <!-- Center Reticle / Scanning Guide -->
+    <div class="scan-reticle" id="scan-reticle">
+      <div class="reticle-corner top-left"></div>
+      <div class="reticle-corner top-right"></div>
+      <div class="reticle-corner bottom-left"></div>
+      <div class="reticle-corner bottom-right"></div>
+      <p class="reticle-instruction">Point camera at the physical trigger marker</p>
+    </div>
+
+    <!-- Bottom Action & Direct-Response Card -->
+    <footer class="hud-footer" id="cta-card">
+      <div class="cta-content">
+        <span class="cta-kicker">SPATIAL AIRSPACE UNLOCKED</span>
+        <h3 class="cta-headline" id="cta-headline">CYBER CITY MECHA DROP</h3>
+        <p class="cta-subtext" id="cta-subtext">Exclusive spatial access at DLF CyberHub.</p>
+      </div>
+      <div class="cta-actions">
+        <button class="btn btn-primary" id="btn-claim-pass">Claim In-Store Pass</button>
+        <button class="btn btn-secondary" id="btn-record-snap">Share Snap</button>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
