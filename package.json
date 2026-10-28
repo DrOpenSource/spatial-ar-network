@@ -11,5 +11,12 @@
   },
   "devDependencies": {
     "vite": "^6.0.0"
+  },
+  "overrides": {
+    "canvas": "^3.1.0"
+  },
+  "dependencies": {
+    "mind-ar": "^1.2.5",
+    "three": "^0.160.1"
   }
 }

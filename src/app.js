@@ -3,6 +3,9 @@
  * Powered by MindAR.js & Three.js (Zero App Download Required)
  */
 
+import * as THREE from 'three';
+import { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('#ar-container');
   const trackingStatus = document.querySelector('#tracking-status');
@@ -12,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize MindAR with Three.js
   // Note: For custom QR/stickers, replace targetIndex with your compiled .mind file
-  const mindarThree = new window.MINDAR.IMAGE.MindARThree({
+  const mindarThree = new MindARThree({
     container: container,
     imageTargetSrc: 'https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind',
     uiLoading: 'no',
@@ -126,5 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  start();
+  start().catch((err) => {
+    // Camera denied, insecure context (non-HTTPS), or target file failed to load
+    console.error('WebAR failed to start:', err);
+    trackingStatus.innerText = 'CAMERA ERROR';
+    trackingStatus.style.color = '#ff4d4d';
+  });
 });
