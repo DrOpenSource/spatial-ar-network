@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sticker": "node tools/generate-sticker.mjs assets/targets/qutub-sticker.png",
+    "target": "node tools/compile-target.mjs assets/targets/qutub-sticker.png public/targets/qutub.mind"
   },
   "devDependencies": {
     "@vitejs/plugin-basic-ssl": "^2.3.0",

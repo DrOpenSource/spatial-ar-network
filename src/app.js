@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnShare = document.querySelector('#btn-record-snap');
 
   // Initialize MindAR with Three.js
-  // Note: For custom QR/stickers, replace targetIndex with your compiled .mind file
+  // Target compiled from assets/targets/qutub-sticker.png (see assets/targets/README.md)
   const mindarThree = new MindARThree({
     container: container,
-    imageTargetSrc: 'https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind',
+    imageTargetSrc: `${import.meta.env.BASE_URL}targets/qutub.mind`,
     uiLoading: 'no',
     uiScanning: 'no'
   });
