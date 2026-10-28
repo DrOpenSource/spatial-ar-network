@@ -155,9 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Start WebAR Loop
   const start = async () => {
     await mindarThree.start();
-    const clock = new THREE.Clock();
-    renderer.setAnimationLoop(() => {
-      flyover.update(clock.getElapsedTime());
+    renderer.setAnimationLoop((timeMs) => {
+      flyover.update(timeMs / 1000);
 
       // Rotate 3D Hologram
       coreMesh.rotation.y += 0.015;

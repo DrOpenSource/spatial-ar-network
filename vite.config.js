@@ -17,10 +17,11 @@ export default defineConfig({
     // MindAR bundles TensorFlow.js (~2 MB); split vendors out so app-only changes don't bust their cache
     chunkSizeWarningLimit: 2500,
     rollupOptions: {
-      // Two pages: sticker mode (index.html) and on-site GPS mode (geo.html)
+      // Pages: sticker mode, on-site GPS mode, virtual mode
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
-        geo: fileURLToPath(new URL('./geo.html', import.meta.url))
+        geo: fileURLToPath(new URL('./geo.html', import.meta.url)),
+        virtual: fileURLToPath(new URL('./virtual.html', import.meta.url))
       },
       output: {
         manualChunks: {

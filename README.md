@@ -20,11 +20,15 @@
 spatial-ar-network/
 ├── index.html                    # Sticker mode: image-tracked AR on the Qutub sticker
 ├── geo.html                      # On-site mode: GPS + tap-to-lock AR on the real Minar
+├── virtual.html                  # Virtual mode: experience over Google 3D tiles of the real place
 ├── vite.config.js                # Dev/preview server with self-signed HTTPS (needed for phone cameras)
 ├── src/
 │   ├── app.js                    # Sticker mode: MindAR tracking, FLYOVER config, HUD actions
-│   ├── geo.js                    # On-site mode: GPS, gyro, calibration, LANDMARK + FLYOVER config
-│   ├── flyover.js                # Shared helicopter orbit (used by both modes)
+│   ├── geo.js                    # On-site mode: GPS, gyro, tap-to-lock calibration
+│   ├── virtual.js                # Virtual mode: Google 3D tiles, ground alignment, orbit controls
+│   ├── landmarks.js              # Landmark registry (name, coordinates, height)
+│   ├── experience.js             # Shared landmark experience (halo, beacon, helicopter) in metres
+│   ├── flyover.js                # Shared helicopter orbit
 │   └── style.css                 # HUD styling
 ├── public/                       # Served as-is and copied into builds
 │   ├── models/                   # 3D GLB models + attribution (CC BY 4.0, see its README)
@@ -32,6 +36,7 @@ spatial-ar-network/
 ├── assets/targets/
 │   ├── qutub-sticker.png         # Printable sticker artwork (3×3 in @ 300 DPI)
 │   └── README.md                 # How targets work, custom designs, QR code, printing tips
+├── patches/                      # mind-ar+1.2.5.patch: MindAR fix for three.js ≥ 0.162 (applied on npm install)
 ├── tools/
 │   ├── generate-sticker.mjs      # Draws the sticker artwork  (npm run sticker)
 │   └── compile-target.mjs        # Compiles PNG → .mind offline (npm run target)
@@ -66,11 +71,20 @@ helicopter are then placed using GPS. Tap **Recalibrate** if it drifts.
 Away from the Minar (more than 2 km), or with `/geo.html?demo`, it runs in demo mode: the Minar is placed
 250 m ahead of wherever you aim, so you can try it at home.
 
-### 4. Customise
+### 4. Virtual mode (from anywhere)
+Open `/virtual.html`: the same halo, beacon and helicopter over Google's photorealistic 3D model of the
+real Qutub Minar. Drag to orbit, pinch/scroll to zoom. Needs a Google Maps Platform API key with the
+**Map Tiles API** enabled, restricted to your site's URLs:
+```bash
+# .env.local (git-ignored). On Vercel, add the same variable under Project → Settings → Environment Variables
+VITE_GOOGLE_MAPS_API_KEY=your-key
+```
+
+### 5. Customise
 * **Sticker:** see [assets/targets/README.md](assets/targets/README.md). After any artwork change run `npm run target`.
 * **3D model:** edit the `FLYOVER` block at the top of [src/app.js](src/app.js) (model file, credit, size, orbit, speed).
 
-### 5. Production build
+### 6. Production build
 ```bash
 npm run build     # outputs dist/
 npm run preview   # serves dist/ over HTTPS on your LAN

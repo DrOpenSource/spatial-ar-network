@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Living Landmarks | Virtual Tour</title>
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <!-- Google Photorealistic 3D Tiles of the real landmark, with the experience on top -->
+  <div id="ar-container" class="virtual-view"></div>
+
+  <div id="ui-overlay">
+    <header class="hud-header">
+      <div class="hud-badge live-indicator">
+        <span class="pulse-dot"></span> VIRTUAL
+      </div>
+      <div class="hud-title" id="landmark-name">QUTUB MINAR</div>
+      <div class="hud-badge" id="tracking-status">LOADING</div>
+    </header>
+
+    <footer class="hud-footer">
+      <div class="cta-content">
+        <span class="cta-kicker">VIRTUAL TOUR</span>
+        <h3 class="cta-headline">Heritage Heli Flyover</h3>
+        <p class="cta-subtext" id="virtual-subtext">Drag to orbit · pinch or scroll to zoom</p>
+      </div>
+      <div class="cta-actions">
+        <button class="btn btn-secondary" id="btn-reset-view">Reset View</button>
+        <a class="btn btn-primary" id="btn-on-site" href="./geo.html">I'm Here: Go On-Site</a>
+      </div>
+      <p class="model-credit" id="model-credit"></p>
+      <p class="map-attribution" id="map-attribution"></p>
+    </footer>
+  </div>
+
+  <script type="module" src="./src/virtual.js"></script>
+</body>
+</html>

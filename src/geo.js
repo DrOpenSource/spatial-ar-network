@@ -9,14 +9,8 @@
  */
 
 import * as THREE from 'three';
-import { BELL_206, createFlyover } from './flyover.js';
-
-const LANDMARK = {
-  name: 'Qutub Minar',
-  lat: 28.52440,   // OpenStreetMap; confirm against satellite imagery before an event
-  lon: 77.18550,
-  height: 72.5     // metres
-};
+import { FLYOVER, createLandmarkExperience } from './experience.js';
+import { DEFAULT_LANDMARK as LANDMARK } from './landmarks.js';
 
 const SETTINGS = {
   eyeHeight: 1.6,            // metres above the ground the phone is held
@@ -25,17 +19,6 @@ const SETTINGS = {
   cameraLongSideFov: 67,     // degrees; typical phone main camera. Only affects off-centre alignment
   gpsSmoothing: 0.05,        // per-frame easing toward the newest GPS fix, hides GPS jumps
   orientationSmoothing: 0.35 // per-frame easing toward the newest gyro reading, hides jitter
-};
-
-// Units here are metres; the orbit is centred on the tower
-const FLYOVER = {
-  ...BELL_206,
-  size: 24,          // 2× real size so it reads from a few hundred metres away
-  orbitRadius: 55,
-  altitude: 90,
-  speed: 0.35,
-  bank: 0.3,
-  bob: 2
 };
 
 const EARTH_RADIUS = 6378137;
@@ -89,45 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
   calibrated.add(landmark);
   scene.add(calibrated);
 
-  // Base ring + crown halo bracket the real tower, which makes any misalignment obvious
-  const baseRing = new THREE.Mesh(
-    new THREE.TorusGeometry(10, 0.6, 8, 64),
-    new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.6 })
-  );
-  baseRing.rotation.x = Math.PI / 2;
-  baseRing.position.y = 0.5;
-  landmark.add(baseRing);
-
-  const crown = new THREE.Group();
-  crown.position.y = LANDMARK.height + 3;
-  const halo = new THREE.Mesh(
-    new THREE.TorusGeometry(9, 0.9, 12, 64),
-    new THREE.MeshBasicMaterial({ color: 0xffb800, transparent: true, opacity: 0.9 })
-  );
-  halo.rotation.x = Math.PI / 2;
-  const outerRing = new THREE.Mesh(
-    new THREE.TorusGeometry(14, 0.5, 8, 64),
-    new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.7 })
-  );
-  outerRing.rotation.x = Math.PI / 2 + 0.3;
-  const beacon = new THREE.Mesh(
-    new THREE.CylinderGeometry(1.5, 1.5, 300, 16, 1, true),
-    new THREE.MeshBasicMaterial({
-      color: 0x00f0ff,
-      transparent: true,
-      opacity: 0.35,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false
-    })
-  );
-  beacon.position.y = 150;
-  crown.add(halo, outerRing, beacon);
-  landmark.add(crown);
-
-  const flyover = createFlyover(FLYOVER);
-  flyover.object.position.y = FLYOVER.altitude;
-  landmark.add(flyover.object);
-  flyover.loaded
+  const experience = createLandmarkExperience(LANDMARK);
+  landmark.add(experience.group);
+  experience.flyover.loaded
     .then(() => { modelCredit.textContent = FLYOVER.credit; })
     .catch((err) => console.warn('Flyover model failed to load.', err));
 
@@ -307,15 +254,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --- Render loop ---
-  const clock = new THREE.Clock();
-  renderer.setAnimationLoop(() => {
-    const t = clock.getElapsedTime();
+  renderer.setAnimationLoop((timeMs) => {
+    const t = timeMs / 1000;
     if (hasOrientation) camera.quaternion.slerp(deviceQuat, SETTINGS.orientationSmoothing);
     if (state === 'locked') landmark.position.lerp(landmarkTarget, SETTINGS.gpsSmoothing);
 
-    flyover.update(t);
-    outerRing.rotation.z = t * 0.4;
-    halo.scale.setScalar(1 + Math.sin(t * 2) * 0.05);
+    experience.update(t);
 
     renderer.render(scene, camera);
   });
