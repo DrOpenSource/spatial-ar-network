@@ -22,6 +22,11 @@ const DRACO_DECODER_PATH = 'https://www.gstatic.com/draco/versioned/decoders/1.5
 const START_VIEW = { x: 160, y: 110, z: 220 };
 const GROUND_PROBE_OFFSET = 25;  // probe the ground this far from the centre, clear of the structure itself
 
+// Tiles measure height from the WGS84 ellipsoid, not sea level. Start near the real ground so the camera
+// isn't underground (where only coarse tiles load), then refine by raycasting the detailed tiles.
+const GROUND_ELLIPSOID_HEIGHT_ESTIMATE = 200;  // Mehrauli: ~240 m above sea level, geoid ~40 m below sea level
+const MAX_GROUND_CORRECTION = 300;             // larger "corrections" come from coarse placeholder tiles; ignore them
+
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('#ar-container');
   const trackingStatus = document.querySelector('#tracking-status');
@@ -68,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
   tiles.registerPlugin(new ReorientationPlugin({
     lat: THREE.MathUtils.degToRad(landmark.lat),
     lon: THREE.MathUtils.degToRad(landmark.lon),
-    height: 0
+    height: GROUND_ELLIPSOID_HEIGHT_ESTIMATE
   }));
   tiles.setCamera(camera);
 
@@ -95,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const raycaster = new THREE.Raycaster();
   const down = new THREE.Vector3(0, -1, 0);
   const hitHeightAt = (x, z) => {
-    raycaster.set(new THREE.Vector3(x, 2000, z), down);
+    raycaster.set(new THREE.Vector3(x, MAX_GROUND_CORRECTION + 500, z), down);
     const [hit] = raycaster.intersectObject(tiles.group, true);
     return hit ? hit.point.y : null;
   };
@@ -111,7 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (heights.length === 0) return;
     heights.sort((a, b) => a - b);
     const ground = heights[Math.floor(heights.length / 2)];
-    if (Math.abs(ground) > 0.2) globe.position.y -= ground;
+    const totalCorrection = globe.position.y - ground;
+    if (Math.abs(ground) > 0.2 && Math.abs(totalCorrection) < MAX_GROUND_CORRECTION) globe.position.y = totalCorrection;
 
     // Diagnostic: height of the model directly above the base, i.e. the structure's top if coordinates are right
     const top = hitHeightAt(0, 0);
