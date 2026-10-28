@@ -150,20 +150,27 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // User Actions
+  // Placeholder until a real partner offer (coupon link, wallet pass) is wired in
   btnClaim.addEventListener('click', () => {
-    alert('🎉 Spatial Token Claimed! 20% In-Store Pass added to Apple Wallet / Google Pay.');
+    alert('Demo: in a live campaign, this unlocks the partner\'s offer.');
   });
 
-  btnShare.addEventListener('click', () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'I just unlocked the Living Landmark in AR!',
-        text: 'Found this hidden spatial drop at DLF CyberHub / Qutub Minar. Check it out:',
-        url: window.location.href
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard! Share on Instagram / X.');
+  btnShare.addEventListener('click', async () => {
+    const shareData = {
+      title: 'I just unlocked the Living Landmark in AR!',
+      text: 'Found this hidden spatial drop at Qutub Minar. Check it out:',
+      url: window.location.href
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        alert('Link copied to clipboard! Share on Instagram / X.');
+      }
+    } catch (err) {
+      // AbortError = user closed the share sheet, which is not a failure
+      if (err.name !== 'AbortError') alert(`Couldn't share. Copy this link: ${shareData.url}`);
     }
   });
 

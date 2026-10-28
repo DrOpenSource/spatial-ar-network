@@ -4,6 +4,14 @@ The model files in this directory are third-party visual assets. They are not
 covered by the repository's MIT source-code license; each remains available
 under the license listed below.
 
+The models were prepared for the God's Eye View project and reused here unchanged; the
+"Project modifications" column describes that preparation. All except `ship.glb` share one
+convention (meter scale, glTF +Y-up, nose toward −X, centred at the origin), so they can be
+swapped via the `FLYOVER` config in `src/app.js`. `ship.glb` keeps unbaked node transforms and
+needs manual scaling/orientation before use.
+
+The app shows the active model's credit in the HUD; keep `FLYOVER.credit` in sync with this table.
+
 | File | Original work and creator | Source | License | Project modifications |
 |---|---|---|---|---|
 | `airplane.glb` | “boeing 747” by [zairiq-123](https://sketchfab.com/zairiq-123) | [Sketchfab model](https://sketchfab.com/3d-models/boeing-747-9b16672038ba48f98e6d80a159044ed9) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | Substantially modified and optimized for God's Eye View, including geometry/material simplification and coordinate/orientation preparation. The former 24× runtime calibration is baked into the mesh; location, rotation, and scale are applied; the bounding-box centre is at the origin; and the model uses glTF +Y-up with its nose toward local −X. Geometry remains uncompressed so the aircraft asset does not compete with photogrammetry for Draco worker capacity. |
