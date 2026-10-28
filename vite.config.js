@@ -11,5 +11,17 @@ export default defineConfig({
   },
   preview: {
     host: '0.0.0.0'
+  },
+  build: {
+    // MindAR bundles TensorFlow.js (~2 MB); split vendors out so app-only changes don't bust their cache
+    chunkSizeWarningLimit: 2500,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          three: ['three'],
+          mindar: ['mind-ar/dist/mindar-image-three.prod.js']
+        }
+      }
+    }
   }
 });

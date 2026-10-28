@@ -12,8 +12,8 @@ Status as of 2026-10-28.
 | 4 | Custom Qutub Minar sticker target + offline compile tooling | ✅ Done |
 | 5 | GLB helicopter flyover around the sticker's minaret | ✅ Done |
 | 6 | Repo cleanup: README, LICENSE, HUD copy, honest CTA messages | ✅ Done |
-| 7 | Verify production build (`npm run build` / `preview`) | ⏳ Next |
-| 8 | Deploy to a public HTTPS host; add the real QR code to the sticker and recompile | ⏳ |
+| 7 | Verify production build (`npm run build` / `preview`) | ✅ Done |
+| 8 | Deploy to a public HTTPS host; add the real QR code to the sticker and recompile | ⏳ Next |
 | 9 | Decide on brand/location risks (unlicensed brand use in GTM playbook; ASI rules at Qutub Minar) | 🟡 Needs owner decision |
 
 ## Landmark lock-on (after 6–8)
