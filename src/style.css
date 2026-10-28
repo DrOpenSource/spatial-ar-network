@@ -191,6 +191,63 @@ body, html {
   display: none;
 }
 
+/* On-site GPS mode (geo.html) */
+#camera-feed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.aim-crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 56px;
+  height: 56px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.aim-crosshair[hidden] {
+  display: none;
+}
+
+.aim-crosshair::before,
+.aim-crosshair::after {
+  content: "";
+  position: absolute;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+}
+
+.aim-crosshair::before { left: 50%; top: 0; width: 2px; height: 100%; transform: translateX(-50%); }
+.aim-crosshair::after { top: 50%; left: 0; height: 2px; width: 100%; transform: translateY(-50%); }
+
+.aim-ring {
+  position: absolute;
+  inset: 14px;
+  border: 2px solid var(--accent-gold);
+  border-radius: 50%;
+}
+
+.geo-readout {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-cyan);
+}
+
+.geo-readout:empty {
+  display: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 .btn {
   flex: 1;
   padding: 12px 14px;

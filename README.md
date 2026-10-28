@@ -18,10 +18,13 @@
 
 ```
 spatial-ar-network/
-├── index.html                    # WebAR client: camera view + glassmorphic HUD
+├── index.html                    # Sticker mode: image-tracked AR on the Qutub sticker
+├── geo.html                      # On-site mode: GPS + tap-to-lock AR on the real Minar
 ├── vite.config.js                # Dev/preview server with self-signed HTTPS (needed for phone cameras)
 ├── src/
-│   ├── app.js                    # MindAR tracking, helicopter flyover (FLYOVER config), HUD actions
+│   ├── app.js                    # Sticker mode: MindAR tracking, FLYOVER config, HUD actions
+│   ├── geo.js                    # On-site mode: GPS, gyro, calibration, LANDMARK + FLYOVER config
+│   ├── flyover.js                # Shared helicopter orbit (used by both modes)
 │   └── style.css                 # HUD styling
 ├── public/                       # Served as-is and copied into builds
 │   ├── models/                   # 3D GLB models + attribution (CC BY 4.0, see its README)
@@ -56,11 +59,18 @@ Requires Node.js 18+. The dev server runs over HTTPS with a self-signed certific
 4. Point the camera at [`assets/targets/qutub-sticker.png`](assets/targets/qutub-sticker.png) — printed, or open full-screen on your computer — from about 20–30 cm.
 5. The badge turns **LOCKED** and a helicopter circles the minaret.
 
-### 3. Customise
+### 3. On-site mode (no sticker)
+Open `/geo.html` on your phone near the Qutub Minar. Tap **Start AR**, allow camera, location and motion
+access, put the crosshair on the very top of the tower, and tap **Lock on Minar**. The halo, beacon and
+helicopter are then placed using GPS. Tap **Recalibrate** if it drifts.
+Away from the Minar (more than 2 km), or with `/geo.html?demo`, it runs in demo mode: the Minar is placed
+250 m ahead of wherever you aim, so you can try it at home.
+
+### 4. Customise
 * **Sticker:** see [assets/targets/README.md](assets/targets/README.md). After any artwork change run `npm run target`.
 * **3D model:** edit the `FLYOVER` block at the top of [src/app.js](src/app.js) (model file, credit, size, orbit, speed).
 
-### 4. Production build
+### 5. Production build
 ```bash
 npm run build     # outputs dist/
 npm run preview   # serves dist/ over HTTPS on your LAN

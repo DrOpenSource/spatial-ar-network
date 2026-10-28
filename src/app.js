@@ -4,20 +4,20 @@
  */
 
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js';
+import { BELL_206, createFlyover } from './flyover.js';
 
 // Model that circles the minaret drawn on the sticker. Any GLB in public/models works (meter scale,
 // Y-up, nose toward −X). Units are sticker widths; the sticker's centre is the origin, +Y is up the
-// minaret, +Z points out of the sticker. Keep `credit` in sync with public/models/README.md (CC BY 4.0).
+// minaret, +Z points out of the sticker.
 const FLYOVER = {
-  url: `${import.meta.env.BASE_URL}models/bell206.glb`,
-  credit: '3D model: “Bell 206 JetRanger” by terran4627, CC BY 4.0 (modified)',
+  ...BELL_206,
   size: 0.3,                               // longest side of the model
   center: { x: -0.22, y: 0.12, z: 0.35 },  // minaret axis, pushed out so the orbit stays in front of the sticker
   orbitRadius: 0.3,
   speed: 0.7,                              // radians per second
-  bank: 0.25                               // roll into the turn, radians
+  bank: 0.25,                              // roll into the turn, radians
+  bob: 0.03
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -104,37 +104,15 @@ document.addEventListener('DOMContentLoaded', () => {
   keyLight.position.set(1, -1, 3);
   scene.add(keyLight);
 
-  // Nesting keeps each transform simple: orbitPivot spins around the minaret's vertical (Y) axis →
-  // flyer sits on the circle facing along it → bankGroup rolls toward the centre of the turn
-  const orbitPivot = new THREE.Group();
-  orbitPivot.position.set(FLYOVER.center.x, FLYOVER.center.y, FLYOVER.center.z);
-  const flyer = new THREE.Group();
-  flyer.position.x = FLYOVER.orbitRadius;
-  flyer.rotation.y = -Math.PI / 2;  // nose (−X) → direction of travel (−Z at the start of the orbit)
-  const bankGroup = new THREE.Group();
-  bankGroup.rotation.x = FLYOVER.bank;
-  flyer.add(bankGroup);
-  orbitPivot.add(flyer);
-  anchor.group.add(orbitPivot);
-
-  new GLTFLoader().load(
-    FLYOVER.url,
-    (gltf) => {
-      const model = gltf.scene;
-      const box = new THREE.Box3().setFromObject(model);
-      const dims = box.getSize(new THREE.Vector3());
-      model.position.sub(box.getCenter(new THREE.Vector3()));
-
-      const wrapper = new THREE.Group();
-      wrapper.add(model);
-      wrapper.scale.setScalar(FLYOVER.size / Math.max(dims.x, dims.y, dims.z));
-      bankGroup.add(wrapper);
+  const flyover = createFlyover(FLYOVER);
+  flyover.object.position.set(FLYOVER.center.x, FLYOVER.center.y, FLYOVER.center.z);
+  anchor.group.add(flyover.object);
+  flyover.loaded
+    .then(() => {
       holoGroup.visible = false;  // keep the drawn minaret clear; the hologram is only the fallback
       modelCredit.textContent = FLYOVER.credit;
-    },
-    undefined,
-    (err) => console.warn('Flyover model failed to load; showing hologram only.', err)
-  );
+    })
+    .catch((err) => console.warn('Flyover model failed to load; showing hologram only.', err));
 
   // Tracking Events
   anchor.onTargetFound = () => {
@@ -179,10 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     await mindarThree.start();
     const clock = new THREE.Clock();
     renderer.setAnimationLoop(() => {
-      // Orbit by elapsed time so speed is the same on 30fps and 60fps phones
-      const t = clock.getElapsedTime();
-      orbitPivot.rotation.y = t * FLYOVER.speed;
-      flyer.position.y = Math.sin(t * 1.3) * 0.03;
+      flyover.update(clock.getElapsedTime());
 
       // Rotate 3D Hologram
       coreMesh.rotation.y += 0.015;

@@ -14,7 +14,7 @@ Status as of 2026-10-28.
 | 6 | Repo cleanup: README, LICENSE, HUD copy, honest CTA messages | ✅ Done |
 | 7 | Verify production build (`npm run build` / `preview`) | ✅ Done |
 | 8 | Deploy to Vercel (https://spatial-ar-network.vercel.app, auto-deploys from main); QR code on the sticker | ✅ Done |
-| 9 | Decide on brand/location risks (unlicensed brand use in GTM playbook; ASI rules at Qutub Minar) | 🟡 Needs owner decision |
+| 9 | Decide on brand/location risks | ✅ Decided: on-site activations use GPS mode (task 10), so nothing is placed on the monument. Open items: a commercial promo shoot inside the ticketed complex may need ASI filming permission; GTM playbook brand wording left as-is by owner choice |
 
 ## Landmark lock-on (after 6–8)
 
@@ -24,7 +24,7 @@ tasks get as close as possible in the browser.
 
 | # | Task | Notes |
 |---|---|---|
-| 10 | **On-site GPS mode**: content placed at the minaret's coordinates using GPS + compass ([LocAR.js](https://www.npmjs.com/package/locar)), with a "line up the top of the Minar and tap" calibration to cancel compass error | Best for large, sky-scale content (e.g. helicopter orbiting ~100 m up). Check LocAR's three.js version against MindAR's `<0.162` constraint — may need a separate page. iOS needs motion/orientation permission. Confirm exact tower coordinates on a map. |
+| 10 | **On-site GPS mode** (`geo.html`): GPS position + gyroscope orientation, with a "line up the top of the Minar and tap Lock" calibration that fixes the heading (no compass, so magnetic interference can't skew it). Auto demo mode beyond 2 km, or with `?demo` | ✅ Built and verified in simulation (lock error < 1 px). 🟡 Needs a field test at the Minar. LocAR.js was not used: it now hard-depends on three.js 0.181, which conflicts with MindAR. Tower coordinates (28.52440, 77.18550) are from OpenStreetMap; confirm on satellite imagery. |
 | 11 | **Virtual digital-twin mode**: same content rendered over Google Photorealistic 3D Tiles at the Qutub coordinates, viewable from anywhere | First confirm 3D Tiles coverage for Mehrauli; needs a Map Tiles API key and Google attribution. Possibly reuse the God's Eye View project. |
 
 Design principle for 10–11: define content once in real-world coordinates (lat/lng/altitude) and

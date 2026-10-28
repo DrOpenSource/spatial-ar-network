@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 
@@ -16,6 +17,11 @@ export default defineConfig({
     // MindAR bundles TensorFlow.js (~2 MB); split vendors out so app-only changes don't bust their cache
     chunkSizeWarningLimit: 2500,
     rollupOptions: {
+      // Two pages: sticker mode (index.html) and on-site GPS mode (geo.html)
+      input: {
+        main: fileURLToPath(new URL('./index.html', import.meta.url)),
+        geo: fileURLToPath(new URL('./geo.html', import.meta.url))
+      },
       output: {
         manualChunks: {
           three: ['three'],

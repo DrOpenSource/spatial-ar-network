@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Living Landmarks | On-Site AR</title>
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <!-- Rear camera feed, with the transparent 3D layer on top -->
+  <video id="camera-feed" playsinline muted autoplay></video>
+  <div id="ar-container"></div>
+
+  <div id="ui-overlay">
+    <header class="hud-header">
+      <div class="hud-badge live-indicator">
+        <span class="pulse-dot"></span> ON-SITE AR
+      </div>
+      <div class="hud-title">QUTUB MINAR · MEHRAULI</div>
+      <div class="hud-badge" id="tracking-status">READY</div>
+    </header>
+
+    <!-- Aiming crosshair: the user puts this on the top of the real tower, then taps Lock -->
+    <div class="aim-crosshair" id="aim-crosshair" hidden>
+      <span class="aim-ring"></span>
+    </div>
+
+    <footer class="hud-footer">
+      <div class="cta-content">
+        <span class="cta-kicker" id="geo-kicker">GPS LANDMARK LOCK</span>
+        <h3 class="cta-headline" id="geo-headline">Stand where you can see the Minar</h3>
+        <p class="cta-subtext" id="geo-subtext">We find you with GPS, then you confirm the tower with one tap.</p>
+      </div>
+      <p class="geo-readout" id="geo-readout"></p>
+      <div class="cta-actions">
+        <button class="btn btn-primary" id="btn-geo-action">Start AR</button>
+      </div>
+      <p class="model-credit" id="model-credit"></p>
+    </footer>
+  </div>
+
+  <script type="module" src="./src/geo.js"></script>
+</body>
+</html>
