@@ -13,7 +13,7 @@ Status as of 2026-10-28.
 | 5 | GLB helicopter flyover around the sticker's minaret | ✅ Done |
 | 6 | Repo cleanup: README, LICENSE, HUD copy, honest CTA messages | ✅ Done |
 | 7 | Verify production build (`npm run build` / `preview`) | ✅ Done |
-| 8 | Deploy to a public HTTPS host; add the real QR code to the sticker and recompile | ⏳ Next |
+| 8 | Deploy to Vercel (https://spatial-ar-network.vercel.app, auto-deploys from main); QR code on the sticker | ✅ Done |
 | 9 | Decide on brand/location risks (unlicensed brand use in GTM playbook; ASI rules at Qutub Minar) | 🟡 Needs owner decision |
 
 ## Landmark lock-on (after 6–8)

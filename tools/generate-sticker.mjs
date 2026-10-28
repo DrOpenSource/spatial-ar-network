@@ -1,16 +1,17 @@
 /**
  * Generate the Qutub Minar sticker artwork used as the MindAR image target.
  *
- *   node tools/generate-sticker.mjs [output.png] [--qr qr.png]
+ *   node tools/generate-sticker.mjs [output.png] [--url https://…] [--qr qr.png]
  *
  * Output is 900x900 px = 3x3 inch at 300 DPI. The design is deliberately dense, high-contrast
- * and asymmetric (what MindAR's feature tracker needs). Without --qr, the bottom-right corner
- * holds a marked placeholder; pass a QR image once the app has a public URL, then recompile.
+ * and asymmetric (what MindAR's feature tracker needs). The bottom-right corner holds a QR code
+ * drawn from --url (or a ready-made image via --qr); with neither, a marked placeholder.
  * Recompile the .mind target after ANY change to the artwork.
  */
 
 import fs from 'node:fs';
 import { createCanvas, loadImage, registerFont } from 'canvas';
+import QRCode from 'qrcode';
 
 const SIZE = 900;
 const FRAME = 34;
@@ -25,9 +26,13 @@ const COLORS = {
 };
 
 const args = process.argv.slice(2);
-const qrFlag = args.indexOf('--qr');
-const qrPath = qrFlag >= 0 ? args[qrFlag + 1] : null;
-const outPath = args.find((a, i) => !a.startsWith('--') && i !== qrFlag + 1) ?? 'assets/targets/qutub-sticker.png';
+const flag = (name) => {
+  const i = args.indexOf(name);
+  return i >= 0 ? args[i + 1] : null;
+};
+const qrUrl = flag('--url');
+const qrPath = flag('--qr');
+const outPath = args.find((a, i) => !a.startsWith('--') && !args[i - 1]?.startsWith('--')) ?? 'assets/targets/qutub-sticker.png';
 
 // Bold system fonts give the title crisp corners; fall back to the default sans if missing
 const FONT_DIR = 'C:/Windows/Fonts';
@@ -364,6 +369,22 @@ const drawQrArea = async () => {
   ctx.lineWidth = 6;
   ctx.strokeRect(x, y, size, size);
 
+  if (qrUrl) {
+    // Draw modules directly on whole-pixel boundaries: crisp edges scan more reliably once printed.
+    // Error correction H tolerates scuffs/glare on a sticker that lives outdoors.
+    const { modules } = QRCode.create(qrUrl, { errorCorrectionLevel: 'H' });
+    const quiet = 2;
+    const cell = Math.floor((size - 28) / (modules.size + quiet * 2));
+    const offset = Math.floor((size - cell * modules.size) / 2);
+    ctx.fillStyle = '#000000';
+    for (let r = 0; r < modules.size; r++) {
+      for (let c = 0; c < modules.size; c++) {
+        if (modules.get(r, c)) ctx.fillRect(x + offset + c * cell, y + offset + r * cell, cell, cell);
+      }
+    }
+    return;
+  }
+
   if (qrPath) {
     const qr = await loadImage(qrPath);
     ctx.drawImage(qr, x + 14, y + 14, size - 28, size - 28);
@@ -434,4 +455,5 @@ await drawQrArea();
 drawFrame();
 
 fs.writeFileSync(outPath, canvas.toBuffer('image/png'));
-console.log(`wrote ${outPath} (${SIZE}x${SIZE}px = 3x3 in @ 300 DPI)${qrPath ? ' with QR' : ' with QR placeholder'}`);
+const qrNote = qrUrl ? ` with QR → ${qrUrl}` : qrPath ? ' with QR image' : ' with QR placeholder';
+console.log(`wrote ${outPath} (${SIZE}x${SIZE}px = 3x3 in @ 300 DPI)${qrNote}`);

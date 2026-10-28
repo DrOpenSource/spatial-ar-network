@@ -14,23 +14,19 @@ content is anchored to it. Every target therefore has two files:
 ## Commands
 
 ```bash
-npm run sticker   # regenerate the artwork from tools/generate-sticker.mjs
+npm run sticker   # regenerate the artwork (QR → https://spatial-ar-network.vercel.app)
 npm run target    # compile assets/targets/qutub-sticker.png → public/targets/qutub.mind
 ```
 
 `npm run target` prints feature-point counts. For reference, MindAR's own demo card scores
 ~600 matching points; the Qutub sticker scores ~4,000. Below ~300, expect slow or flaky detection.
 
-## Adding the QR code (after deploying)
+## The QR code
 
-The bottom-right box is a placeholder. Once the app has a public HTTPS URL:
-
-1. Make a QR PNG of that URL (any free generator; plain black-on-white, high error correction).
-2. Regenerate with it and recompile:
-   ```bash
-   node tools/generate-sticker.mjs assets/targets/qutub-sticker.png --qr path/to/qr.png
-   npm run target
-   ```
+The bottom-right QR opens the live app, so people can scan it with their normal camera app first.
+It is drawn by the generator (error correction H, so it survives scuffs and glare). If the URL
+changes, update the `--url` in the `sticker` script in `package.json`, then run `npm run sticker`
+and `npm run target`. A ready-made QR image also works: `--qr path/to/qr.png`.
 
 ## Using your own design instead
 
