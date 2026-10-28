@@ -29,6 +29,7 @@ spatial-ar-network/
 │   ├── landmarks.js              # Landmark registry (name, coordinates, height)
 │   ├── experience.js             # Shared landmark experience (halo, beacon, helicopter) in metres
 │   ├── flyover.js                # Shared helicopter orbit
+│   ├── models/qutub-minar.js     # Our 3D Qutub Minar (where Google has no 3D coverage)
 │   └── style.css                 # HUD styling
 ├── public/                       # Served as-is and copied into builds
 │   ├── models/                   # 3D GLB models + attribution (CC BY 4.0, see its README)
@@ -72,8 +73,10 @@ Away from the Minar (more than 2 km), or with `/geo.html?demo`, it runs in demo 
 250 m ahead of wherever you aim, so you can try it at home.
 
 ### 4. Virtual mode (from anywhere)
-Open `/virtual.html`: the same halo, beacon and helicopter over Google's photorealistic 3D model of the
-real Qutub Minar. Drag to orbit, pinch/scroll to zoom. Needs a Google Maps Platform API key with the
+Open `/virtual.html`: the same halo, beacon and helicopter over Google's real 3D map data. Drag to orbit,
+pinch/scroll to zoom, and switch landmarks with the picker (or `?landmark=eiffel-tower`). Google has no 3D
+buildings for Mehrauli, so the Qutub Minar is our own model (`src/models/qutub-minar.js`) standing on Google's
+satellite ground; the Eiffel Tower uses Google's photorealistic 3D tiles. Needs a Google Maps Platform API key with the
 **Map Tiles API** enabled, restricted to your site's URLs:
 ```bash
 # .env.local (git-ignored). On Vercel, add the same variable under Project → Settings → Environment Variables

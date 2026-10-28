@@ -25,7 +25,7 @@ tasks get as close as possible in the browser.
 | # | Task | Notes |
 |---|---|---|
 | 10 | **On-site GPS mode** (`geo.html`): GPS position + gyroscope orientation, with a "line up the top of the Minar and tap Lock" calibration that fixes the heading (no compass, so magnetic interference can't skew it). Auto demo mode beyond 2 km, or with `?demo` | ✅ Built and verified in simulation (lock error < 1 px). 🟡 Needs a field test at the Minar. LocAR.js was not used: it now hard-depends on three.js 0.181, which conflicts with MindAR. Tower coordinates (28.52440, 77.18550) are from OpenStreetMap; confirm on satellite imagery. |
-| 11 | **Virtual mode** (`virtual.html`): same experience over Google Photorealistic 3D Tiles of the real place; orbit/zoom from anywhere; ground found automatically by raycasting the tiles | 🟡 Built; waiting on the Google Maps API key (`VITE_GOOGLE_MAPS_API_KEY`) to verify 3D coverage of Mehrauli and the tower coordinates. Needed for Vercel too. Upgraded to three.js 0.186 by patching MindAR's one incompatible line (`patches/`). |
+| 11 | **Virtual mode** (`virtual.html`): experience over Google 3D map data, orbit/zoom from anywhere, landmark picker | ✅ Built and verified locally. Google has **no 3D buildings for Mehrauli** (flat Airbus imagery only), so the Qutub Minar is our own procedural model on Google's satellite ground; Paris (Eiffel Tower) uses Google's photorealistic tiles as the reference. Qutub coordinates refined to 28.52443, 77.18546 from a top-down satellite check (±2 m). Production needs `VITE_GOOGLE_MAPS_API_KEY` set in Vercel. |
 
 ## Product vision (agreed 2026-10-28)
 

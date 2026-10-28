@@ -256,6 +256,20 @@ a.btn {
   text-decoration: none;
 }
 
+.landmark-select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-glass);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+  font: 600 13px var(--font-family);
+}
+
+.landmark-select option {
+  background: #0a0e17;
+}
+
 .map-attribution {
   font-size: 9px;
   color: var(--text-muted);
