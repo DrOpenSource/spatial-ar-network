@@ -10,7 +10,7 @@
 
 import * as THREE from 'three';
 import { FLYOVER, createLandmarkExperience } from './experience.js';
-import { DEFAULT_LANDMARK as LANDMARK } from './landmarks.js';
+import { LANDMARKS, landmarkFromUrl } from './landmarks.js';
 
 const SETTINGS = {
   eyeHeight: 1.6,            // metres above the ground the phone is held
@@ -46,6 +46,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const readout = document.querySelector('#geo-readout');
   const btnAction = document.querySelector('#btn-geo-action');
   const modelCredit = document.querySelector('#model-credit');
+  const landmarkTitle = document.querySelector('#landmark-name');
+  const landmarkSelect = document.querySelector('#landmark-select');
+  const btnVirtualView = document.querySelector('#btn-virtual-view');
+
+  const landmark = landmarkFromUrl();
+
+  if (landmarkTitle) {
+    landmarkTitle.innerText = `${landmark.name} · ${landmark.area}`.toUpperCase();
+  }
+
+  if (btnVirtualView) {
+    btnVirtualView.href = `./virtual.html?landmark=${encodeURIComponent(landmark.id)}`;
+  }
+
+  // Populate landmark picker grouped by region
+  if (landmarkSelect) {
+    const groups = {};
+    for (const item of Object.values(LANDMARKS)) {
+      const groupName = item.region || 'Other';
+      if (!groups[groupName]) {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = groupName;
+        groups[groupName] = optgroup;
+        landmarkSelect.appendChild(optgroup);
+      }
+      groups[groupName].appendChild(new Option(`${item.name} (${item.area})`, item.id, false, item.id === landmark.id));
+    }
+    landmarkSelect.addEventListener('change', () => {
+      const params = new URLSearchParams(window.location.search);
+      params.set('landmark', landmarkSelect.value);
+      window.location.search = params.toString();
+    });
+  }
+
+  headline.innerText = `Stand where you can see ${landmark.name}`;
+  subtext.innerText = 'We find you with GPS, then you confirm the structure with one tap.';
 
   const forceDemo = new URLSearchParams(window.location.search).has('demo');
 
@@ -65,15 +101,15 @@ document.addEventListener('DOMContentLoaded', () => {
   scene.add(sun);
 
   // `calibrated` turns the content around the user to match the gyro's arbitrary heading (set on Lock);
-  // `landmark` sits at the tower base, so everything inside it is in metres around the tower
+  // `landmarkGroup` sits at the landmark base, so everything inside it is in metres around the structure
   const calibrated = new THREE.Group();
   calibrated.visible = false;
-  const landmark = new THREE.Group();
-  calibrated.add(landmark);
+  const landmarkGroup = new THREE.Group();
+  calibrated.add(landmarkGroup);
   scene.add(calibrated);
 
-  const experience = createLandmarkExperience(LANDMARK);
-  landmark.add(experience.group);
+  const experience = createLandmarkExperience(landmark);
+  landmarkGroup.add(experience.group);
   experience.flyover.loaded
     .then(() => { modelCredit.textContent = FLYOVER.credit; })
     .catch((err) => console.warn('Flyover model failed to load.', err));
@@ -121,14 +157,14 @@ document.addEventListener('DOMContentLoaded', () => {
   let gpsError = null;
   let demoMode = forceDemo;
   let distance = null;
-  const landmarkTarget = new THREE.Vector3();  // tower base relative to the user, before calibration
+  const landmarkTarget = new THREE.Vector3();  // landmark base relative to the user, before calibration
 
   // A GPS error only forces demo mode if we never had a fix; after that we keep the last good one
   const usingDemo = () => demoMode || (!userFix && gpsError);
 
   const updateTarget = () => {
     if (userFix) {
-      const { east, north } = offsetMetres(userFix, LANDMARK);
+      const { east, north } = offsetMetres(userFix, landmark);
       distance = Math.hypot(east, north);
       demoMode = forceDemo || distance > SETTINGS.maxOnSiteDistance;
       if (!demoMode) landmarkTarget.set(east, 0, -north);
@@ -150,22 +186,22 @@ document.addEventListener('DOMContentLoaded', () => {
       kicker.innerText = demo ? 'DEMO MODE' : 'GPS LANDMARK LOCK';
       if (demo) {
         headline.innerText = 'Aim at the horizon';
-        const why = userFix ? `You're ${formatDistance(distance)} from the Minar` : 'Location is unavailable';
+        const why = userFix ? `You're ${formatDistance(distance)} from ${landmark.name}` : 'Location is unavailable';
         subtext.innerText = forceDemo
-          ? `Demo: the Minar will appear ${SETTINGS.demoDistance} m ahead of where you aim.`
-          : `${why}, so the Minar will appear ${SETTINGS.demoDistance} m ahead of where you aim.`;
+          ? `Demo: ${landmark.name} will appear ${SETTINGS.demoDistance} m ahead of where you aim.`
+          : `${why}, so ${landmark.name} will appear ${SETTINGS.demoDistance} m ahead of where you aim.`;
       } else {
-        headline.innerText = 'Line up the top of the Minar';
-        subtext.innerText = 'Hold the phone upright, put the crosshair on the very top of the tower, then tap Lock.';
+        headline.innerText = `Line up the top of ${landmark.name}`;
+        subtext.innerText = `Hold the phone upright, put the crosshair on the very top of ${landmark.name}, then tap Lock.`;
       }
       const ready = hasOrientation && (userFix || demo);
       btnAction.disabled = !ready;
-      btnAction.innerText = ready ? 'Lock on Minar' : 'Waiting for sensors…';
+      btnAction.innerText = ready ? `Lock on ${landmark.name}` : 'Waiting for sensors…';
     }
 
     if (gpsError && !userFix && !forceDemo) readout.innerText = `GPS: ${gpsError}`;
     else if (forceDemo) readout.innerText = 'Demo mode (?demo)';
-    else if (userFix) readout.innerText = `GPS ±${Math.round(userFix.accuracy)} m · ${formatDistance(distance)} to ${LANDMARK.name}`;
+    else if (userFix) readout.innerText = `GPS ±${Math.round(userFix.accuracy)} m · ${formatDistance(distance)} to ${landmark.name}`;
     else if (state !== 'idle') readout.innerText = 'Waiting for GPS…';
   };
 
@@ -190,14 +226,14 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTarget();
     const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
     calibrated.rotation.y = yawOf(forward) - yawOf(landmarkTarget);
-    landmark.position.copy(landmarkTarget);
+    landmarkGroup.position.copy(landmarkTarget);
     calibrated.visible = true;
     crosshair.hidden = true;
     state = 'locked';
     setBadge('LOCKED', '#00ff88');
     kicker.innerText = 'SPATIAL AIRSPACE UNLOCKED';
-    headline.innerText = 'Heritage Heli Flyover';
-    subtext.innerText = 'Drifted off the tower? Tap Recalibrate and line it up again.';
+    headline.innerText = `${landmark.name} Flyover`;
+    subtext.innerText = `Drifted off ${landmark.name}? Tap Recalibrate and line it up again.`;
     btnAction.innerText = 'Recalibrate';
   };
 
@@ -257,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderer.setAnimationLoop((timeMs) => {
     const t = timeMs / 1000;
     if (hasOrientation) camera.quaternion.slerp(deviceQuat, SETTINGS.orientationSmoothing);
-    if (state === 'locked') landmark.position.lerp(landmarkTarget, SETTINGS.gpsSmoothing);
+    if (state === 'locked') landmarkGroup.position.lerp(landmarkTarget, SETTINGS.gpsSmoothing);
 
     experience.update(t);
 

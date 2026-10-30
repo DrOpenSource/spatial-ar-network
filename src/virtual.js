@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const landmarkSelect = document.querySelector('#landmark-select');
   const subtext = document.querySelector('#virtual-subtext');
   const btnReset = document.querySelector('#btn-reset-view');
+  const btnOnSite = document.querySelector('#btn-on-site');
   const modelCredit = document.querySelector('#model-credit');
   const mapAttribution = document.querySelector('#map-attribution');
 
@@ -49,9 +50,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const startView = START_VIEW.clone().multiplyScalar(viewScale);
   landmarkName.innerText = `${landmark.name} · ${landmark.area}`.toUpperCase();
 
-  // Landmark picker: reloads the page for the chosen landmark
-  for (const { id, name, area } of Object.values(LANDMARKS)) {
-    landmarkSelect.add(new Option(`${name}, ${area}`, id, false, id === landmark.id));
+  if (btnOnSite) {
+    btnOnSite.href = `./geo.html?landmark=${encodeURIComponent(landmark.id)}`;
+  }
+
+  // Landmark picker grouped by region: reloads the page for the chosen landmark
+  const groups = {};
+  for (const item of Object.values(LANDMARKS)) {
+    const groupName = item.region || 'Other';
+    if (!groups[groupName]) {
+      const optgroup = document.createElement('optgroup');
+      optgroup.label = groupName;
+      groups[groupName] = optgroup;
+      landmarkSelect.appendChild(optgroup);
+    }
+    groups[groupName].appendChild(new Option(`${item.name} (${item.area})`, item.id, false, item.id === landmark.id));
   }
   landmarkSelect.addEventListener('change', () => {
     const params = new URLSearchParams(window.location.search);
@@ -81,7 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
   sun.position.set(300, 500, 200);
   scene.add(sun);
 
-  const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 20000);
+  const maxFar = Math.max(25000, landmark.height * 30);
+  const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, maxFar);
   camera.position.copy(startView);
 
   // --- Google 3D tiles, re-centred so the landmark's base is the origin ---
@@ -155,8 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, landmark.height / 2, 0);
   controls.enableDamping = true;
-  controls.minDistance = 40;
-  controls.maxDistance = 2000 * viewScale;
+  controls.minDistance = Math.max(30, landmark.footprintRadius * 1.2);
+  controls.maxDistance = Math.max(2500, landmark.height * 15);
   controls.maxPolarAngle = THREE.MathUtils.degToRad(85);  // stay above the ground
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.6;

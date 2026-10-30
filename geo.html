@@ -16,7 +16,7 @@
       <div class="hud-badge live-indicator">
         <span class="pulse-dot"></span> ON-SITE AR
       </div>
-      <div class="hud-title">QUTUB MINAR · MEHRAULI</div>
+      <div class="hud-title" id="landmark-name">QUTUB MINAR · MEHRAULI</div>
       <div class="hud-badge" id="tracking-status">READY</div>
     </header>
 
@@ -28,12 +28,14 @@
     <footer class="hud-footer">
       <div class="cta-content">
         <span class="cta-kicker" id="geo-kicker">GPS LANDMARK LOCK</span>
-        <h3 class="cta-headline" id="geo-headline">Stand where you can see the Minar</h3>
-        <p class="cta-subtext" id="geo-subtext">We find you with GPS, then you confirm the tower with one tap.</p>
+        <h3 class="cta-headline" id="geo-headline">Stand where you can see the landmark</h3>
+        <p class="cta-subtext" id="geo-subtext">We find you with GPS, then you confirm the structure with one tap.</p>
       </div>
+      <select class="landmark-select" id="landmark-select" aria-label="Choose a landmark"></select>
       <p class="geo-readout" id="geo-readout"></p>
       <div class="cta-actions">
         <button class="btn btn-primary" id="btn-geo-action">Start AR</button>
+        <a class="btn btn-secondary" id="btn-virtual-view" href="./virtual.html">Virtual Tour</a>
       </div>
       <p class="model-credit" id="model-credit"></p>
     </footer>

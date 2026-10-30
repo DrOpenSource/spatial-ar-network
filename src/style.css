@@ -266,8 +266,10 @@ a.btn {
   font: 600 13px var(--font-family);
 }
 
-.landmark-select option {
+.landmark-select option,
+.landmark-select optgroup {
   background: #0a0e17;
+  color: #ffffff;
 }
 
 .map-attribution {
