@@ -41,7 +41,7 @@
 - Virtual mode (task 11): Built & verified locally and in production. Custom Qutub Minar model for Mehrauli (no Google 3D coverage). Eiffel Tower uses Google's photorealistic tiles as reference
 - All commits pushed and deployed to Vercel — all three modes live and tested
 - Qutub coordinates confirmed: 28.52443, 77.18546 (±2m from satellite check)
-- **Expanded Landmark Registry**: Added 14 global & Indian pilot landmarks (Qutub Minar, DLF CyberHub, India Gate, Taj Mahal, Eiffel Tower, Big Ben, Colosseum, Statue of Liberty, Empire State Building, Space Needle, Tokyo Tower, Burj Khalifa, Marina Bay Sands, Sydney Opera House). Added regional optgroup pickers to both `virtual.html` and `geo.html`, with two-way cross linking (`?landmark=<id>`).
+- **Expanded Landmark & Hotspot Registry (22 Locations)**: Added 22 global landmarks and high-footfall street/action brand hijack hotspots (Qutub Minar, DLF CyberHub, India Gate, Taj Mahal, Eiffel Tower, Big Ben, Colosseum, Southbank Undercroft, Leicester Square, Tempelhofer Feld, Statue of Liberty, Empire State Building, Times Square, Space Needle, Venice Skatepark, Huntington Beach Pier, Tokyo Tower, Shibuya Scramble Crossing, Yoyogi Park & Harajuku, Burj Khalifa, Marina Bay Sands, Sydney Opera House). Added regional optgroup pickers to both `virtual.html` and `geo.html`, with two-way cross linking (`?landmark=<id>`). Updated `docs/GTM_PLAYBOOK.md` with creative 3D AR projection strategies for target brands (Red Bull, Nike, PlayStation, Burger King, Vans, etc.).
 
 ### Next Steps (from docs/ROADMAP.md — Product Vision)
 1. **Field test at Qutub Minar** — on-site GPS mode needs real-world verification

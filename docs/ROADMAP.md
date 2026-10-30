@@ -35,7 +35,7 @@ in metres around the landmark** (`src/experience.js`).
 | Phase | Scope |
 |---|---|
 | With the on-site field test | **Verified lock**: combine GPS proximity + camera image match against reference photos + user tap. **Frozen lock**: GPS jitter no longer moves content after lock. **Locked screen view**: when the phone looks away from the landmark, switch automatically to the virtual-mode 3D model with the same animations; switch back to the camera overlay when pointed at it again |
-| Registry Expansion | ✅ **More landmarks in the registry & picker**: Expanded to 14 global & Indian pilot landmarks across 5 regions. Added regional optgroup pickers to both virtual and on-site mode with two-way deep linking. |
+| Registry Expansion | ✅ **Landmark & Brand Hijack Registry (22 locations)**: Expanded registry to 22 global landmarks and urban hotspots across 5 regions. Added regional optgroup pickers to both `virtual.html` and `geo.html`, with two-way deep linking (`?landmark=<id>`). Integrated the 8 action/street-culture brand hijack locations into the GTM Playbook. |
 | Vision | **Social layer**: people leave drops at landmarks in a shared database, visible on-site and virtually |
 
 Design principle for 10–11: define content once in real-world coordinates (lat/lng/altitude) and

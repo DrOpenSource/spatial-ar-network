@@ -96,6 +96,42 @@ export const LANDMARKS = {
     groundEllipsoidHeight: 70,
     model: null
   },
+  'southbank-undercroft': {
+    id: 'southbank-undercroft',
+    name: 'Southbank Undercroft',
+    area: 'London',
+    region: 'Europe',
+    lat: 51.50650,
+    lon: -0.11650,
+    height: 35.0,
+    footprintRadius: 35.0,
+    groundEllipsoidHeight: 50,
+    model: null
+  },
+  'leicester-square': {
+    id: 'leicester-square',
+    name: 'Leicester Square',
+    area: 'London',
+    region: 'Europe',
+    lat: 51.51130,
+    lon: -0.12840,
+    height: 30.0,
+    footprintRadius: 32.0,
+    groundEllipsoidHeight: 55,
+    model: null
+  },
+  'tempelhofer-feld': {
+    id: 'tempelhofer-feld',
+    name: 'Tempelhofer Feld',
+    area: 'Berlin',
+    region: 'Europe',
+    lat: 52.47300,
+    lon: 13.40400,
+    height: 25.0,
+    footprintRadius: 65.0,
+    groundEllipsoidHeight: 85,
+    model: null
+  },
 
   // --- Americas ---
   'statue-of-liberty': {
@@ -122,6 +158,18 @@ export const LANDMARKS = {
     groundEllipsoidHeight: -15,
     model: null
   },
+  'times-square': {
+    id: 'times-square',
+    name: 'Times Square',
+    area: 'New York',
+    region: 'Americas',
+    lat: 40.75800,
+    lon: -73.98550,
+    height: 110.0,
+    footprintRadius: 35.0,
+    groundEllipsoidHeight: -20,
+    model: null
+  },
   'space-needle': {
     id: 'space-needle',
     name: 'Space Needle',
@@ -132,6 +180,30 @@ export const LANDMARKS = {
     height: 184.0,
     footprintRadius: 25.0,
     groundEllipsoidHeight: 20,
+    model: null
+  },
+  'venice-skatepark': {
+    id: 'venice-skatepark',
+    name: 'Venice Skatepark',
+    area: 'Los Angeles',
+    region: 'Americas',
+    lat: 33.98703,
+    lon: -118.47352,
+    height: 14.0,
+    footprintRadius: 30.0,
+    groundEllipsoidHeight: -35,
+    model: null
+  },
+  'huntington-beach-pier': {
+    id: 'huntington-beach-pier',
+    name: 'Huntington Beach Pier',
+    area: 'California',
+    region: 'Americas',
+    lat: 33.65530,
+    lon: -117.99950,
+    height: 18.0,
+    footprintRadius: 35.0,
+    groundEllipsoidHeight: -35,
     model: null
   },
 
@@ -145,6 +217,30 @@ export const LANDMARKS = {
     lon: 139.74543,
     height: 333.0,
     footprintRadius: 45.0,
+    groundEllipsoidHeight: 65,
+    model: null
+  },
+  'shibuya-crossing': {
+    id: 'shibuya-crossing',
+    name: 'Shibuya Scramble Crossing',
+    area: 'Tokyo',
+    region: 'Asia & Middle East',
+    lat: 35.65950,
+    lon: 139.70055,
+    height: 60.0,
+    footprintRadius: 35.0,
+    groundEllipsoidHeight: 50,
+    model: null
+  },
+  'yoyogi-park': {
+    id: 'yoyogi-park',
+    name: 'Yoyogi Park & Harajuku',
+    area: 'Tokyo',
+    region: 'Asia & Middle East',
+    lat: 35.66980,
+    lon: 139.70290,
+    height: 30.0,
+    footprintRadius: 40.0,
     groundEllipsoidHeight: 65,
     model: null
   },
