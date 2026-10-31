@@ -10,16 +10,60 @@
   <!-- Google Photorealistic 3D Tiles of the real landmark, with the experience on top -->
   <div id="ar-container" class="virtual-view"></div>
 
-  <!-- Cinematic Orbital Retargeting Teleport Overlay -->
-  <div class="orbital-warp-overlay" id="orbital-warp-overlay">
-    <div class="warp-content">
-      <div class="warp-reticle">
-        <span class="warp-scanner"></span>
+  <!-- Realistic Recon Satellite Optical Zoom Viewfinder -->
+  <div class="satellite-recon-overlay active" id="satellite-recon-overlay">
+    <!-- Optical Lens Vignette, Micro Grid & Scan Beam -->
+    <div class="recon-lens-vignette"></div>
+    <div class="recon-scan-line"></div>
+
+    <!-- 4 Corner Recon Telemetry Sensors -->
+    <div class="recon-corner recon-corner-tl">
+      <div class="recon-tag"><span class="recon-pulse-dot"></span> SAT-OPTICAL // KEYHOLE-12</div>
+      <div class="recon-sub">AIRSPACE GRID SEC-04</div>
+    </div>
+    <div class="recon-corner recon-corner-tr">
+      <div class="recon-tag">SENSOR: SPECTRAL 3D</div>
+      <div class="recon-sub">DATUM: WGS84 ELLIPSOID</div>
+    </div>
+    <div class="recon-corner recon-corner-bl">
+      <div class="recon-tag">RESOLUTION: 0.15M/PX</div>
+      <div class="recon-sub" id="recon-coords-bl">28.5244° N, 77.1855° E</div>
+    </div>
+    <div class="recon-corner recon-corner-br">
+      <div class="recon-tag">STATUS: <span id="recon-status-badge">ORBITAL RECON</span></div>
+      <div class="recon-sub">TAP TO SKIP DIVE</div>
+    </div>
+
+    <!-- Center Scope Reticle & Dynamic Clamping Brackets -->
+    <div class="recon-center-scope" id="recon-center-scope">
+      <div class="recon-bracket recon-bracket-tl"></div>
+      <div class="recon-bracket recon-bracket-tr"></div>
+      <div class="recon-bracket recon-bracket-bl"></div>
+      <div class="recon-bracket recon-bracket-br"></div>
+      <div class="recon-crosshair"></div>
+      <div class="recon-compass-dial"></div>
+    </div>
+
+    <!-- Live Floating Telemetry Readout Card -->
+    <div class="recon-telemetry-card" id="recon-telemetry-card">
+      <div class="recon-phase-pill" id="recon-phase-badge">SATELLITE ORBITAL ACQUISITION</div>
+      <h2 class="recon-target-name" id="recon-target-name">QUTUB MINAR</h2>
+      <p class="recon-target-meta" id="recon-target-meta">28.5244° N, 77.1855° E · MEHRAULI, NEW DELHI</p>
+
+      <div class="recon-stats-row">
+        <div class="recon-stat-box">
+          <span class="recon-stat-label">ALTITUDE</span>
+          <span class="recon-stat-val" id="recon-alt-val">142,500 M</span>
+        </div>
+        <div class="recon-stat-box">
+          <span class="recon-stat-label">OPTICAL ZOOM</span>
+          <span class="recon-stat-val" id="recon-zoom-val">1.0X</span>
+        </div>
+        <div class="recon-stat-box">
+          <span class="recon-stat-label">AIRSPACE</span>
+          <span class="recon-stat-val recon-accent" id="recon-lock-val">APPROACHING</span>
+        </div>
       </div>
-      <div class="warp-kicker">SATELLITE ORBITAL WARP</div>
-      <h2 class="warp-title" id="warp-target-name">ACQUIRING TARGET</h2>
-      <p class="warp-coords" id="warp-target-coords">SYNCHRONIZING 3D AIRSPACE...</p>
-      <div class="warp-bar"><span class="warp-progress"></span></div>
     </div>
   </div>
 

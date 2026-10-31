@@ -42,7 +42,8 @@
 - All 6 commits pushed and deployed to Vercel — all three modes live and tested
 - Qutub coordinates confirmed: 28.52443, 77.18546 (±2m from satellite check)
 - **Expanded Landmark & Hotspot Registry (22 Locations)**: Added 22 global landmarks and high-footfall street/action brand hijack hotspots. Updated `docs/GTM_PLAYBOOK.md` with creative 3D AR projection strategies for target brands (Red Bull, Nike, PlayStation, Burger King, Vans, etc.).
-- **Two-Tier Country -> Landmark Pickers**: Replaced giant 22-item single dropdown with a clean two-tier Country -> Landmark selector on both `virtual.html` and `geo.html`. In-memory landmark hot-swapping in `geo.html` (prevents camera drops and gyro resets) and sci-fi orbital retargeting warp in `virtual.html`.
+- **Two-Tier Country -> Landmark Pickers**: Replaced giant 22-item single dropdown with a clean two-tier Country -> Landmark selector on both `virtual.html` and `geo.html`. In-memory landmark hot-swapping in `geo.html` (prevents camera drops and gyro resets).
+- **Realistic Spy/Recon Satellite Zoom Dive (`virtual.html`)**: Replaced the opaque 2D loading screen with an authentic 3D satellite reconnaissance dive. Camera starts high in the stratosphere/orbit (15,000m–25,000m) and executes a cinematic deceleration dive into the landmark. Features a transparent optical HUD with tactical corner sensors, live dynamic altitude counting (`ALT: 180,000 M` -> `180 M`), real-time optical zoom factor (`1.0X` -> `48.0X`), scanning laser line, and clamping target brackets that lock in neon green (`[ TARGET LOCKED ]`). Supports in-memory hot-swapping across all landmarks and instant tap-to-skip.
 - **Locked Screen View (Smart View-Switching)**: Built into `geo.html`. When phone turns away from the landmark (> 42° off-target), camera video blurs and 3D digital twin model appears with dynamic turn radar (`←/→ TURN X° TO LANDMARK`). Snaps back to live camera AR when facing the landmark (< 30°). Also includes manual toggles (Auto View / Camera AR / 3D Twin).
 - **Google 3D Photorealistic Tiles Coverage Audit**: Identified true 3D photogrammetric building meshes (16 locations across US, UK, France, Italy, Germany, Japan, Australia) vs. 2D satellite orthophotos on terrain (6 locations: India, UAE, Singapore).
 - **Modular 3D Asset Engine (`src/assets.js`)**: 5 switchable assets (`bell-206` helicopter, `stunt-plane` aerobatic smoke racer, `neon-sneaker` holographic runner, `cyber-titan` Shibuya bipedal mech, and `energy-core` DLF quantum core) with per-landmark default mappings.
@@ -59,6 +60,8 @@
 | File | Purpose |
 |------|---------|
 | `vite.config.js` | Multi-page build, HTTPS dev server, chunk splitting |
+| `src/landmarks.js` | Landmark registry (coordinates, height) |
+| `src/experience.js` | Shared AR experience (halo, beacon, helicopter) in metres |
 | `src/landmarks.js` | Landmark registry (coordinates, height, defaultAsset) |
 | `src/assets.js` | Modular 3D asset catalog & procedural Three.js generators |
 | `src/admin.js` | Admin Spec Studio drawer (live asset & brand color tuner) |

@@ -455,3 +455,4 @@ export function createAssetInstance(assetConfig, customOptions = {}) {
 
   return { object: pivot, loaded, update };
 }
+

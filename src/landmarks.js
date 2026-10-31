@@ -464,7 +464,21 @@ export function setupLandmarkPicker(countrySelect, landmarkSelect, currentLandma
   // When Landmark changes, trigger callback
   landmarkSelect.addEventListener('change', () => {
     if (landmarkSelect.value && landmarkSelect.value !== currentLandmark.id) {
-      onSelect(landmarkSelect.value);
+      const chosen = landmarkSelect.value;
+      if (LANDMARKS[chosen]) currentLandmark = LANDMARKS[chosen];
+      onSelect(chosen);
     }
   });
+
+  return {
+    syncLandmark(newLandmark) {
+      currentLandmark = newLandmark;
+      if (countrySelect.value !== newLandmark.country) {
+        countrySelect.value = newLandmark.country;
+        populateLandmarks(newLandmark.country, newLandmark.id);
+      } else {
+        landmarkSelect.value = newLandmark.id;
+      }
+    }
+  };
 }

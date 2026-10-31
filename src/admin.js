@@ -188,3 +188,4 @@ export function initAdminStudio({ landmark, onChange }) {
     drawer.classList.remove('open');
   });
 }
+
