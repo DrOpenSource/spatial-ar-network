@@ -29,7 +29,10 @@
         <span class="pulse-dot"></span> VIRTUAL
       </div>
       <div class="hud-title" id="landmark-name">QUTUB MINAR</div>
-      <div class="hud-badge" id="tracking-status">LOADING</div>
+      <div class="hud-header-actions">
+        <button class="hud-studio-btn" id="btn-studio-toggle" aria-label="Open Spec Studio">⚡ STUDIO</button>
+        <div class="hud-badge" id="tracking-status">LOADING</div>
+      </div>
     </header>
 
     <footer class="hud-footer">
@@ -50,6 +53,58 @@
       <p class="map-attribution" id="map-attribution"></p>
     </footer>
   </div>
+
+  <!-- Spec Studio / Admin Control Drawer -->
+  <aside class="admin-drawer" id="admin-drawer" aria-label="Brand Studio Admin">
+    <div class="admin-drawer-header">
+      <div class="admin-drawer-title">
+        <span class="studio-badge">ADMIN</span>
+        <h3>Brand Spec Studio</h3>
+      </div>
+      <button class="btn-close-studio" id="btn-close-studio" aria-label="Close studio">✕</button>
+    </div>
+
+    <div class="admin-drawer-content">
+      <div class="studio-section">
+        <label class="studio-label" for="studio-asset-select">Active 3D Hologram Asset</label>
+        <select class="hud-select studio-select" id="studio-asset-select"></select>
+      </div>
+
+      <div class="studio-section">
+        <label class="studio-label">Brand Color Presets</label>
+        <div class="studio-presets-row" id="studio-presets-row"></div>
+        <div class="studio-color-pickers">
+          <label class="studio-color-label">Beacon: <input type="color" id="studio-primary-color" value="#00f0ff" /></label>
+          <label class="studio-color-label">Crown: <input type="color" id="studio-accent-color" value="#ffb800" /></label>
+        </div>
+      </div>
+
+      <div class="studio-section">
+        <div class="studio-slider-header">
+          <label class="studio-label" for="studio-speed-slider">Orbit Velocity</label>
+          <span class="studio-val" id="studio-speed-val">1.0x</span>
+        </div>
+        <input type="range" class="studio-slider" id="studio-speed-slider" min="0.2" max="2.5" step="0.1" value="1.0" />
+      </div>
+
+      <div class="studio-section">
+        <div class="studio-slider-header">
+          <label class="studio-label" for="studio-radius-slider">Orbit Radius</label>
+          <span class="studio-val" id="studio-radius-val">1.0x</span>
+        </div>
+        <input type="range" class="studio-slider" id="studio-radius-slider" min="0.5" max="2.0" step="0.1" value="1.0" />
+      </div>
+
+      <div class="studio-section">
+        <label class="studio-label" for="studio-kicker-input">Custom Campaign Kicker</label>
+        <input type="text" class="studio-text-input" id="studio-kicker-input" placeholder="e.g. RED BULL ENDLESS DROP" />
+      </div>
+
+      <div class="studio-actions">
+        <button type="button" class="btn btn-secondary" id="btn-reset-studio">Reset to Default</button>
+      </div>
+    </div>
+  </aside>
 
   <script type="module" src="./src/virtual.js"></script>
 </body>

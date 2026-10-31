@@ -25,6 +25,7 @@ export const LANDMARKS = {
     footprintRadius: 7.2,
     groundEllipsoidHeight: 200,  // ~240 m above sea level, geoid ~40 m below sea level
     model: 'qutub-minar',        // Google has no 3D buildings for Mehrauli, only flat imagery
+    defaultAsset: 'bell-206',
     hasGoogle3D: false,
     meshType: 'custom-3d'
   },
@@ -41,6 +42,7 @@ export const LANDMARKS = {
     footprintRadius: 18.0,
     groundEllipsoidHeight: 170,
     model: null,
+    defaultAsset: 'bell-206',
     hasGoogle3D: false,
     meshType: 'satellite-terrain'
   },
@@ -57,6 +59,7 @@ export const LANDMARKS = {
     footprintRadius: 40.0,
     groundEllipsoidHeight: 180,
     model: null,
+    defaultAsset: 'energy-core',
     hasGoogle3D: false,
     meshType: 'satellite-terrain'
   },
@@ -73,6 +76,7 @@ export const LANDMARKS = {
     footprintRadius: 55.0,
     groundEllipsoidHeight: 125,
     model: null,
+    defaultAsset: 'bell-206',
     hasGoogle3D: false,
     meshType: 'satellite-terrain'
   },
@@ -91,6 +95,7 @@ export const LANDMARKS = {
     footprintRadius: 32.0,
     groundEllipsoidHeight: -25,
     model: null,
+    defaultAsset: 'bell-206',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -107,6 +112,7 @@ export const LANDMARKS = {
     footprintRadius: 45.0,
     groundEllipsoidHeight: -15,
     model: null,
+    defaultAsset: 'neon-sneaker',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -123,6 +129,7 @@ export const LANDMARKS = {
     footprintRadius: 35.0,
     groundEllipsoidHeight: -20,
     model: null,
+    defaultAsset: 'neon-sneaker',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -139,6 +146,7 @@ export const LANDMARKS = {
     footprintRadius: 25.0,
     groundEllipsoidHeight: 20,
     model: null,
+    defaultAsset: 'cyber-titan',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -155,6 +163,7 @@ export const LANDMARKS = {
     footprintRadius: 30.0,
     groundEllipsoidHeight: -35,
     model: null,
+    defaultAsset: 'stunt-plane',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -171,6 +180,7 @@ export const LANDMARKS = {
     footprintRadius: 35.0,
     groundEllipsoidHeight: -35,
     model: null,
+    defaultAsset: 'stunt-plane',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -189,6 +199,7 @@ export const LANDMARKS = {
     footprintRadius: 14.0,
     groundEllipsoidHeight: 50,
     model: null,
+    defaultAsset: 'bell-206',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -205,6 +216,7 @@ export const LANDMARKS = {
     footprintRadius: 35.0,
     groundEllipsoidHeight: 50,
     model: null,
+    defaultAsset: 'neon-sneaker',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -221,6 +233,7 @@ export const LANDMARKS = {
     footprintRadius: 32.0,
     groundEllipsoidHeight: 55,
     model: null,
+    defaultAsset: 'neon-sneaker',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -239,6 +252,7 @@ export const LANDMARKS = {
     footprintRadius: 63.0,
     groundEllipsoidHeight: 80,   // ~35 m above sea level, geoid ~45 m above the ellipsoid
     model: null,                 // covered by Google Photorealistic 3D Tiles
+    defaultAsset: 'bell-206',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -257,6 +271,7 @@ export const LANDMARKS = {
     footprintRadius: 85.0,
     groundEllipsoidHeight: 70,
     model: null,
+    defaultAsset: 'bell-206',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -275,6 +290,7 @@ export const LANDMARKS = {
     footprintRadius: 65.0,
     groundEllipsoidHeight: 85,
     model: null,
+    defaultAsset: 'stunt-plane',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -293,6 +309,7 @@ export const LANDMARKS = {
     footprintRadius: 45.0,
     groundEllipsoidHeight: 65,
     model: null,
+    defaultAsset: 'cyber-titan',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -309,6 +326,7 @@ export const LANDMARKS = {
     footprintRadius: 35.0,
     groundEllipsoidHeight: 50,
     model: null,
+    defaultAsset: 'cyber-titan',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -325,6 +343,7 @@ export const LANDMARKS = {
     footprintRadius: 40.0,
     groundEllipsoidHeight: 65,
     model: null,
+    defaultAsset: 'neon-sneaker',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -343,6 +362,7 @@ export const LANDMARKS = {
     footprintRadius: 65.0,
     groundEllipsoidHeight: -10,
     model: null,
+    defaultAsset: 'energy-core',
     hasGoogle3D: false,
     meshType: 'satellite-terrain'
   },
@@ -361,6 +381,7 @@ export const LANDMARKS = {
     footprintRadius: 85.0,
     groundEllipsoidHeight: 15,
     model: null,
+    defaultAsset: 'energy-core',
     hasGoogle3D: false,
     meshType: 'satellite-terrain'
   },
@@ -379,6 +400,7 @@ export const LANDMARKS = {
     footprintRadius: 60.0,
     groundEllipsoidHeight: 25,
     model: null,
+    defaultAsset: 'bell-206',
     hasGoogle3D: true,
     meshType: 'google-3d'
   }

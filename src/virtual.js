@@ -15,6 +15,7 @@ import { GLTFExtensionsPlugin, ReorientationPlugin, TilesFadePlugin } from '3d-t
 import { FLYOVER, createLandmarkExperience } from './experience.js';
 import { LANDMARKS, landmarkFromUrl, setupLandmarkPicker } from './landmarks.js';
 import { createQutubMinarModel } from './models/qutub-minar.js';
+import { initAdminStudio, getActiveAssetConfig } from './admin.js';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const DRACO_DECODER_PATH = 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/';
@@ -137,11 +138,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const model = landmark.model ? MODELS[landmark.model]() : null;
   if (model) scene.add(model);
 
-  const experience = createLandmarkExperience(landmark);
+  let assetConfig = getActiveAssetConfig(landmark);
+  let experience = createLandmarkExperience(landmark, assetConfig);
   scene.add(experience.group);
-  experience.flyover.loaded
-    .then(() => { modelCredit.textContent = FLYOVER.credit; })
-    .catch((err) => console.warn('Flyover model failed to load.', err));
+
+  const kickerEl = document.querySelector('.cta-kicker');
+  if (kickerEl && assetConfig.campaignKicker) {
+    kickerEl.textContent = assetConfig.campaignKicker;
+  }
+
+  const applyExperienceCredit = (exp) => {
+    exp.flyover.loaded
+      .then(() => { modelCredit.textContent = exp.assetConfig.credit; })
+      .catch((err) => console.warn('Flyover model failed to load.', err));
+  };
+  applyExperienceCredit(experience);
+
+  // Initialize Spec Studio Admin Drawer
+  initAdminStudio({
+    landmark,
+    onChange: (newConfig) => {
+      scene.remove(experience.group);
+      experience = createLandmarkExperience(landmark, newConfig);
+      scene.add(experience.group);
+      applyExperienceCredit(experience);
+      if (kickerEl && newConfig.campaignKicker) {
+        kickerEl.textContent = newConfig.campaignKicker;
+      }
+    }
+  });
 
   // --- Ground alignment: tiles use ellipsoid heights, so find the real ground by raycasting down ---
   const raycaster = new THREE.Raycaster();

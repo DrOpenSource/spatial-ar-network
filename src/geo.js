@@ -12,6 +12,7 @@ import * as THREE from 'three';
 import { FLYOVER, createLandmarkExperience } from './experience.js';
 import { LANDMARKS, landmarkFromUrl, setupLandmarkPicker } from './landmarks.js';
 import { createQutubMinarModel } from './models/qutub-minar.js';
+import { initAdminStudio, getActiveAssetConfig } from './admin.js';
 
 const SETTINGS = {
   eyeHeight: 1.6,            // metres above the ground the phone is held
@@ -94,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnVirtualView = document.querySelector('#btn-virtual-view');
 
   let landmark = landmarkFromUrl();
+  let assetConfig = getActiveAssetConfig(landmark);
   let experience = null;
   let digitalTwin = null;
 
@@ -136,7 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     landmarkGroup.clear();
-    experience = createLandmarkExperience(landmark);
+    assetConfig = getActiveAssetConfig(landmark);
+    experience = createLandmarkExperience(landmark, assetConfig);
     landmarkGroup.add(experience.group);
 
     digitalTwin = createDigitalTwin(landmark);
@@ -144,8 +147,21 @@ document.addEventListener('DOMContentLoaded', () => {
     landmarkGroup.add(digitalTwin);
 
     experience.flyover.loaded
-      .then(() => { modelCredit.textContent = FLYOVER.credit; })
+      .then(() => { modelCredit.textContent = experience.assetConfig.credit; })
       .catch((err) => console.warn('Flyover model failed to load.', err));
+
+    initAdminStudio({
+      landmark,
+      onChange: (newConfig) => {
+        assetConfig = newConfig;
+        landmarkGroup.remove(experience.group);
+        experience = createLandmarkExperience(landmark, assetConfig);
+        landmarkGroup.add(experience.group);
+        experience.flyover.loaded
+          .then(() => { modelCredit.textContent = experience.assetConfig.credit; })
+          .catch((err) => console.warn('Flyover model failed to load.', err));
+      }
+    });
 
     updateTarget();
     if (state === 'locked') {
@@ -192,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
   calibrated.add(landmarkGroup);
   scene.add(calibrated);
 
-  experience = createLandmarkExperience(landmark);
+  experience = createLandmarkExperience(landmark, assetConfig);
   landmarkGroup.add(experience.group);
 
   digitalTwin = createDigitalTwin(landmark);
@@ -200,8 +216,21 @@ document.addEventListener('DOMContentLoaded', () => {
   landmarkGroup.add(digitalTwin);
 
   experience.flyover.loaded
-    .then(() => { modelCredit.textContent = FLYOVER.credit; })
+    .then(() => { modelCredit.textContent = experience.assetConfig.credit; })
     .catch((err) => console.warn('Flyover model failed to load.', err));
+
+  initAdminStudio({
+    landmark,
+    onChange: (newConfig) => {
+      assetConfig = newConfig;
+      landmarkGroup.remove(experience.group);
+      experience = createLandmarkExperience(landmark, assetConfig);
+      landmarkGroup.add(experience.group);
+      experience.flyover.loaded
+        .then(() => { modelCredit.textContent = experience.assetConfig.credit; })
+        .catch((err) => console.warn('Flyover model failed to load.', err));
+    }
+  });
 
   // Match the 3D camera's field of view to the real camera as displayed (object-fit: cover crops it)
   const updateViewport = () => {

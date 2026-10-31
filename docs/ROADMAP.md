@@ -34,6 +34,7 @@ in metres around the landmark** (`src/experience.js`).
 
 | Phase | Scope |
 |---|---|
+| Asset Engine & Spec Studio | 🔄 **Modular Asset Registry & Live Admin Studio**: Extensible 3D asset catalog (Bell 206 Helicopter, Red Bull Stunt Plane, Nike Holographic Sneaker, PlayStation Cyber Titan, Cosmic Energy Core) with per-landmark defaults and an in-app Admin Spec Studio drawer (real-time asset swap, color styling, flight dynamics, and localStorage persistence). |
 | Locked Screen View | ✅ **Smart View-Switching**: Built in `geo.html`. Automatically detects when phone looks away (> 42° off-target), dims camera feed and activates 3D digital twin model with live flyover and turn radar (`← TURN 70°`). Snaps back to camera AR when facing the landmark (< 30°). Includes manual mode controls (Auto View / Camera AR / 3D Twin). |
 | Two-Tier Pickers & 3D Audit | ✅ **Country -> Location Dropdowns & 3D Audit**: Two-tier picker on both `virtual.html` and `geo.html`. Audited all 22 landmarks: 16 have real Google Photorealistic 3D Mesh, 6 use 2D satellite terrain or custom procedural 3D models. |
 | With the on-site field test | **Verified lock**: combine GPS proximity + camera image match against reference photos + user tap. **Frozen lock**: GPS jitter no longer moves content after lock. |
