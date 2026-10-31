@@ -95,6 +95,23 @@ export function createLandmarkExperience(landmark, options = {}) {
   crown.add(halo, outerRing, innerBeacon, outerBeacon);
   group.add(crown);
 
+  // Dynamic Interactive Ground Shockwave Ring
+  const shockwaveGeo = new THREE.RingGeometry(0.5, 3.5, 64);
+  shockwaveGeo.rotateX(-Math.PI / 2);
+  const shockwaveMat = new THREE.MeshBasicMaterial({
+    color: primaryColor,
+    transparent: true,
+    opacity: 0,
+    side: THREE.DoubleSide,
+    blending: THREE.AdditiveBlending
+  });
+  const shockwave = new THREE.Mesh(shockwaveGeo, shockwaveMat);
+  shockwave.position.y = 0.5;
+  group.add(shockwave);
+
+  let shockwaveActive = false;
+  let shockwaveProgress = 0;
+
   const speed = (assetConfig.speed ?? FLYOVER.speed) * (options.speedMultiplier ?? 1.0);
   const orbitRadiusMultiplier = options.orbitRadiusMultiplier ?? 1.0;
   const orbitRadius = Math.max((FLYOVER.orbitRadius * scale) * orbitRadiusMultiplier, landmark.footprintRadius + 20);
@@ -109,14 +126,36 @@ export function createLandmarkExperience(landmark, options = {}) {
     accentColor
   });
 
-  flyover.object.position.y = landmark.height + clearance;
+  if (assetConfig.isGroundColossus) {
+    flyover.object.position.set(0, 0, 0);
+  } else {
+    flyover.object.position.y = landmark.height + clearance;
+  }
   group.add(flyover.object);
+
+  const triggerStunt = () => {
+    flyover.triggerStunt();
+    shockwaveActive = true;
+    shockwaveProgress = 0;
+  };
 
   const update = (seconds) => {
     flyover.update(seconds);
     outerRing.rotation.z = seconds * 0.4;
     halo.scale.setScalar(1 + Math.sin(seconds * 2) * 0.05);
+
+    // Expand interactive shockwave ripples across ground
+    if (shockwaveActive) {
+      shockwaveProgress += 0.025;
+      const radius = 1 + shockwaveProgress * 28 * scale;
+      shockwave.scale.setScalar(radius);
+      shockwaveMat.opacity = Math.max(0, (1 - shockwaveProgress) * 0.95);
+      if (shockwaveProgress >= 1.0) {
+        shockwaveActive = false;
+        shockwaveMat.opacity = 0;
+      }
+    }
   };
 
-  return { group, flyover, assetConfig, update };
+  return { group, flyover, assetConfig, update, triggerStunt };
 }

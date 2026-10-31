@@ -196,6 +196,11 @@ document.addEventListener('DOMContentLoaded', () => {
       kickerEl.textContent = assetConfig.campaignKicker;
     }
 
+    const stuntLabel = document.querySelector('#stunt-label');
+    if (stuntLabel && assetConfig.actionLabel) {
+      stuntLabel.textContent = assetConfig.actionLabel;
+    }
+
     // Spec Studio hot reload
     initAdminStudio({
       landmark: lm,
@@ -206,6 +211,9 @@ document.addEventListener('DOMContentLoaded', () => {
         applyExperienceCredit(experience);
         if (kickerEl && newConfig.campaignKicker) {
           kickerEl.textContent = newConfig.campaignKicker;
+        }
+        if (stuntLabel && experience.assetConfig.actionLabel) {
+          stuntLabel.textContent = experience.assetConfig.actionLabel;
         }
       }
     });
@@ -349,6 +357,81 @@ document.addEventListener('DOMContentLoaded', () => {
   btnReset.addEventListener('click', () => {
     triggerSatelliteDescent(activeLandmark, true);
   });
+
+  // --- Interactive Stunt Trigger ---
+  const btnStunt = document.querySelector('#btn-stunt-trigger');
+  if (btnStunt) {
+    btnStunt.addEventListener('click', () => {
+      if (experience && experience.triggerStunt) {
+        experience.triggerStunt();
+      }
+    });
+  }
+
+  // Tap-to-Stunt Raycaster on 3D viewport
+  const tapRaycaster = new THREE.Raycaster();
+  const tapPointer = new THREE.Vector2();
+
+  renderer.domElement.addEventListener('pointerup', (e) => {
+    if (Math.abs(e.movementX) > 4 || Math.abs(e.movementY) > 4) return;
+    tapPointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+    tapPointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    tapRaycaster.setFromCamera(tapPointer, camera);
+    if (experience && experience.group) {
+      const hits = tapRaycaster.intersectObject(experience.group, true);
+      if (hits.length > 0) {
+        experience.triggerStunt();
+      }
+    }
+  });
+
+  // --- One-Tap Viral AR Capture Button ---
+  const btnCapture = document.querySelector('#btn-capture-drop');
+  if (btnCapture) {
+    btnCapture.addEventListener('click', () => {
+      renderer.render(scene, camera);
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        c.width = img.width;
+        c.height = img.height;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        // Watermark Banner for Social Media Drops
+        const bannerH = Math.max(76, c.height * 0.1);
+        ctx.fillStyle = 'rgba(6, 14, 28, 0.9)';
+        ctx.fillRect(0, c.height - bannerH, c.width, bannerH);
+        ctx.strokeStyle = '#00f0ff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, c.height - bannerH);
+        ctx.lineTo(c.width, c.height - bannerH);
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `bold ${Math.max(16, bannerH * 0.28)}px sans-serif`;
+        ctx.fillText(`${activeLandmark.name.toUpperCase()} · ${activeLandmark.area.toUpperCase()}`, 24, c.height - bannerH + bannerH * 0.42);
+
+        const assetCfg = ASSET_CATALOG[experience.assetConfig.id] || experience.assetConfig;
+        ctx.fillStyle = '#00f0ff';
+        ctx.font = `600 ${Math.max(11, bannerH * 0.2)}px monospace`;
+        ctx.fillText(`${assetCfg.kicker} · ${activeLandmark.lat.toFixed(4)}° N, ${activeLandmark.lon.toFixed(4)}° E`, 24, c.height - bannerH + bannerH * 0.78);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.textAlign = 'right';
+        ctx.font = `700 ${Math.max(12, bannerH * 0.22)}px sans-serif`;
+        ctx.fillText('SPATIAL AR NETWORK', c.width - 24, c.height - bannerH + bannerH * 0.55);
+
+        const link = document.createElement('a');
+        link.download = `${activeLandmark.id}-${assetCfg.brand.toLowerCase().replace(/[^a-z0-9]/g, '-')}-drop.png`;
+        link.href = c.toDataURL('image/png');
+        link.click();
+      };
+      img.src = dataUrl;
+    });
+  }
 
   // Start initial satellite descent dive on page load
   triggerSatelliteDescent(activeLandmark, true);

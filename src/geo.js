@@ -229,8 +229,73 @@ document.addEventListener('DOMContentLoaded', () => {
       experience.flyover.loaded
         .then(() => { modelCredit.textContent = experience.assetConfig.credit; })
         .catch((err) => console.warn('Flyover model failed to load.', err));
+      if (stuntLabel && experience.assetConfig.actionLabel) {
+        stuntLabel.textContent = experience.assetConfig.actionLabel;
+      }
     }
   });
+
+  // Stunt & Capture wiring for on-site mode
+  const btnStunt = document.querySelector('#btn-stunt-trigger');
+  const stuntLabel = document.querySelector('#stunt-label');
+  const btnCapture = document.querySelector('#btn-capture-drop');
+
+  if (stuntLabel && assetConfig.actionLabel) {
+    stuntLabel.textContent = assetConfig.actionLabel;
+  }
+
+  if (btnStunt) {
+    btnStunt.addEventListener('click', () => {
+      if (experience && experience.triggerStunt) {
+        experience.triggerStunt();
+      }
+    });
+  }
+
+  if (btnCapture) {
+    btnCapture.addEventListener('click', () => {
+      renderer.render(scene, camera);
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        c.width = img.width;
+        c.height = img.height;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        const bannerH = Math.max(76, c.height * 0.1);
+        ctx.fillStyle = 'rgba(6, 14, 28, 0.9)';
+        ctx.fillRect(0, c.height - bannerH, c.width, bannerH);
+        ctx.strokeStyle = '#00f0ff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, c.height - bannerH);
+        ctx.lineTo(c.width, c.height - bannerH);
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `bold ${Math.max(16, bannerH * 0.28)}px sans-serif`;
+        ctx.fillText(`${landmark.name.toUpperCase()} · ${landmark.area.toUpperCase()}`, 24, c.height - bannerH + bannerH * 0.42);
+
+        const assetCfg = experience.assetConfig;
+        ctx.fillStyle = '#00f0ff';
+        ctx.font = `600 ${Math.max(11, bannerH * 0.2)}px monospace`;
+        ctx.fillText(`${assetCfg.kicker} · ${landmark.lat.toFixed(4)}° N, ${landmark.lon.toFixed(4)}° E`, 24, c.height - bannerH + bannerH * 0.78);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.textAlign = 'right';
+        ctx.font = `700 ${Math.max(12, bannerH * 0.22)}px sans-serif`;
+        ctx.fillText('SPATIAL AR NETWORK', c.width - 24, c.height - bannerH + bannerH * 0.55);
+
+        const link = document.createElement('a');
+        link.download = `${landmark.id}-${assetCfg.brand.toLowerCase().replace(/[^a-z0-9]/g, '-')}-drop.png`;
+        link.href = c.toDataURL('image/png');
+        link.click();
+      };
+      img.src = dataUrl;
+    });
+  }
 
   // Match the 3D camera's field of view to the real camera as displayed (object-fit: cover crops it)
   const updateViewport = () => {

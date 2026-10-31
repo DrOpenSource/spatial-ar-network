@@ -163,7 +163,7 @@ export const LANDMARKS = {
     footprintRadius: 30.0,
     groundEllipsoidHeight: -35,
     model: null,
-    defaultAsset: 'cessna-skyhawk',
+    defaultAsset: 'stunt-plane',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -216,7 +216,7 @@ export const LANDMARKS = {
     footprintRadius: 35.0,
     groundEllipsoidHeight: 50,
     model: null,
-    defaultAsset: 'cessna-skyhawk',
+    defaultAsset: 'colossal-sneaker',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },
@@ -326,7 +326,7 @@ export const LANDMARKS = {
     footprintRadius: 35.0,
     groundEllipsoidHeight: 50,
     model: null,
-    defaultAsset: 'supersonic-jet',
+    defaultAsset: 'cyber-titan',
     hasGoogle3D: true,
     meshType: 'google-3d'
   },

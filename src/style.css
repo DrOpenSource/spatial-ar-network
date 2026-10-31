@@ -700,6 +700,57 @@ a.btn {
   border: 1px solid var(--border-glass);
 }
 
+/* Stunt & Viral Drop Actions Row */
+.stunt-actions-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.btn-stunt {
+  flex: 2.2;
+  background: linear-gradient(135deg, #0070d1 0%, #00f0ff 100%);
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 18px rgba(0, 112, 209, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 14px;
+}
+
+.btn-stunt:hover {
+  background: linear-gradient(135deg, #0082f0 0%, #38f8ff 100%);
+}
+
+.btn-stunt:active {
+  transform: scale(0.96);
+}
+
+.btn-capture {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  color: #ffffff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 11px 12px;
+}
+
+.btn-capture:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.btn-capture:active {
+  transform: scale(0.96);
+}
+
 /* Admin Spec Studio Drawer */
 .admin-drawer {
   position: fixed;
