@@ -163,21 +163,108 @@ body, html {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-/* Footer & CTA Card */
+/* Footer & Collapsible Controls Drawer */
 .hud-footer {
   background: var(--bg-dark);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-glass);
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: 18px;
+  padding: 10px 16px 14px;
   pointer-events: auto;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  transform: translateY(0);
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  gap: 10px;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+/* Drawer Handle Bar */
+.drawer-handle-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 2px 0 4px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+
+.drawer-drag-pill {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+  margin-bottom: 6px;
+  transition: background 0.2s ease, width 0.2s ease;
+}
+
+.drawer-handle-bar:hover .drawer-drag-pill {
+  background: var(--accent-cyan);
+  width: 48px;
+}
+
+.drawer-handle-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.drawer-handle-title {
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drawer-handle-toggle {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+/* Collapsible Body */
+.drawer-collapsible-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 480px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, margin 0.3s ease;
+}
+
+/* Collapsed Drawer State */
+.hud-footer.is-collapsed {
+  padding: 8px 14px 10px;
+  gap: 6px;
+  background: rgba(8, 14, 26, 0.9);
+}
+
+.hud-footer.is-collapsed .drawer-collapsible-body {
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.hud-footer.is-collapsed .cta-subtext {
+  display: none;
+}
+
+.hud-footer.is-collapsed .cta-content {
+  margin-bottom: 2px;
+}
+
+.hud-footer.is-collapsed .cta-headline {
+  font-size: 15px;
 }
 
 .cta-kicker {

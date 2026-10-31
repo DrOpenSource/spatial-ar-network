@@ -297,6 +297,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- Collapsible Footer Controls Drawer ---
+  const footerDrawer = document.querySelector('#hud-footer');
+  const footerCollapseBtn = document.querySelector('#footer-collapse-btn');
+  const drawerToggleLabel = document.querySelector('#drawer-toggle-label');
+
+  if (footerDrawer && footerCollapseBtn) {
+    let isCollapsed = false;
+    const toggleFooter = (forceState) => {
+      isCollapsed = typeof forceState === 'boolean' ? forceState : !isCollapsed;
+      footerDrawer.classList.toggle('is-collapsed', isCollapsed);
+      footerCollapseBtn.setAttribute('aria-expanded', String(!isCollapsed));
+      if (drawerToggleLabel) {
+        drawerToggleLabel.textContent = isCollapsed ? 'CONTROLS ▲' : 'COLLAPSE ▼';
+      }
+    };
+
+    footerCollapseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFooter();
+    });
+
+    let touchStartY = 0;
+    footerCollapseBtn.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    footerCollapseBtn.addEventListener('touchend', (e) => {
+      const touchEndY = e.changedTouches[0].clientY;
+      const diff = touchEndY - touchStartY;
+      if (diff > 25 && !isCollapsed) {
+        toggleFooter(true);
+      } else if (diff < -25 && isCollapsed) {
+        toggleFooter(false);
+      }
+    }, { passive: true });
+  }
+
   // Match the 3D camera's field of view to the real camera as displayed (object-fit: cover crops it)
   const updateViewport = () => {
     const sw = window.innerWidth;

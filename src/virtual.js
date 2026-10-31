@@ -196,6 +196,11 @@ document.addEventListener('DOMContentLoaded', () => {
       kickerEl.textContent = assetConfig.campaignKicker;
     }
 
+    const headlineEl = document.querySelector('#cta-headline');
+    if (headlineEl && (assetConfig.headline || experience.assetConfig.headline)) {
+      headlineEl.textContent = assetConfig.headline || experience.assetConfig.headline;
+    }
+
     const stuntLabel = document.querySelector('#stunt-label');
     if (stuntLabel && assetConfig.actionLabel) {
       stuntLabel.textContent = assetConfig.actionLabel;
@@ -211,6 +216,9 @@ document.addEventListener('DOMContentLoaded', () => {
         applyExperienceCredit(experience);
         if (kickerEl && newConfig.campaignKicker) {
           kickerEl.textContent = newConfig.campaignKicker;
+        }
+        if (headlineEl && experience.assetConfig.headline) {
+          headlineEl.textContent = experience.assetConfig.headline;
         }
         if (stuntLabel && experience.assetConfig.actionLabel) {
           stuntLabel.textContent = experience.assetConfig.actionLabel;
@@ -357,6 +365,44 @@ document.addEventListener('DOMContentLoaded', () => {
   btnReset.addEventListener('click', () => {
     triggerSatelliteDescent(activeLandmark, true);
   });
+
+  // --- Collapsible Footer Controls Drawer ---
+  const footerDrawer = document.querySelector('#hud-footer');
+  const footerCollapseBtn = document.querySelector('#footer-collapse-btn');
+  const drawerToggleLabel = document.querySelector('#drawer-toggle-label');
+
+  if (footerDrawer && footerCollapseBtn) {
+    let isCollapsed = false;
+    const toggleFooter = (forceState) => {
+      isCollapsed = typeof forceState === 'boolean' ? forceState : !isCollapsed;
+      footerDrawer.classList.toggle('is-collapsed', isCollapsed);
+      footerCollapseBtn.setAttribute('aria-expanded', String(!isCollapsed));
+      if (drawerToggleLabel) {
+        drawerToggleLabel.textContent = isCollapsed ? 'CONTROLS ▲' : 'COLLAPSE ▼';
+      }
+    };
+
+    footerCollapseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFooter();
+    });
+
+    // Touch swipe down on handle collapses, swipe up expands
+    let touchStartY = 0;
+    footerCollapseBtn.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    footerCollapseBtn.addEventListener('touchend', (e) => {
+      const touchEndY = e.changedTouches[0].clientY;
+      const diff = touchEndY - touchStartY;
+      if (diff > 25 && !isCollapsed) {
+        toggleFooter(true);
+      } else if (diff < -25 && isCollapsed) {
+        toggleFooter(false);
+      }
+    }, { passive: true });
+  }
 
   // --- Interactive Stunt Trigger ---
   const btnStunt = document.querySelector('#btn-stunt-trigger');

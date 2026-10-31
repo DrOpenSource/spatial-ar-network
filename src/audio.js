@@ -109,3 +109,4 @@ export function playStuntSound(type = 'stomp') {
     console.warn('Audio playback error:', err);
   }
 }
+
