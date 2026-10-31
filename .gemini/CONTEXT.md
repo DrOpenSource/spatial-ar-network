@@ -33,7 +33,7 @@
 - **Local dev:** `.env.local` (git-ignored) holds the same key locally
 - **HTTPS:** Vite dev server uses `@vitejs/plugin-basic-ssl` for self-signed certs (phone cameras require secure context)
 
-## Current Status (as of 2026-10-30)
+## Current Status (as of 2026-10-31)
 
 ### ✅ Completed
 - Sticker MVP (tasks 1–9): MindAR tracking, custom sticker target, helicopter flyover, HUD, Vercel deploy
@@ -41,14 +41,15 @@
 - Virtual mode (task 11): Built & verified locally and in production. Custom Qutub Minar model for Mehrauli (no Google 3D coverage). Eiffel Tower uses Google's photorealistic tiles as reference
 - All 6 commits pushed and deployed to Vercel — all three modes live and tested
 - Qutub coordinates confirmed: 28.52443, 77.18546 (±2m from satellite check)
-- **Expanded Landmark & Hotspot Registry (22 Locations)**: Added 22 global landmarks and high-footfall street/action brand hijack hotspots (Qutub Minar, DLF CyberHub, India Gate, Taj Mahal, Eiffel Tower, Big Ben, Colosseum, Southbank Undercroft, Leicester Square, Tempelhofer Feld, Statue of Liberty, Empire State Building, Times Square, Space Needle, Venice Skatepark, Huntington Beach Pier, Tokyo Tower, Shibuya Scramble Crossing, Yoyogi Park & Harajuku, Burj Khalifa, Marina Bay Sands, Sydney Opera House). Added regional optgroup pickers to both `virtual.html` and `geo.html`, with two-way cross linking (`?landmark=<id>`). Updated `docs/GTM_PLAYBOOK.md` with creative 3D AR projection strategies for target brands (Red Bull, Nike, PlayStation, Burger King, Vans, etc.).
+- **Expanded Landmark & Hotspot Registry (22 Locations)**: Added 22 global landmarks and high-footfall street/action brand hijack hotspots. Updated `docs/GTM_PLAYBOOK.md` with creative 3D AR projection strategies for target brands (Red Bull, Nike, PlayStation, Burger King, Vans, etc.).
+- **Two-Tier Country -> Landmark Pickers**: Replaced giant 22-item single dropdown with a clean two-tier Country -> Landmark selector on both `virtual.html` and `geo.html`.
+- **Locked Screen View (Smart View-Switching)**: Built into `geo.html`. When phone turns away from the landmark (> 42° off-target), camera video blurs and 3D digital twin model appears with dynamic turn radar (`←/→ TURN X° TO LANDMARK`). Snaps back to live camera AR when facing the landmark (< 30°). Also includes manual toggles (Auto View / Camera AR / 3D Twin).
 
 ### 🔜 Next Steps (from ROADMAP.md — Product Vision)
 1. **Field test at Qutub Minar** — on-site GPS mode needs real-world verification
 2. **Verified lock** — combine GPS proximity + camera image match against reference photos + user tap
 3. **Frozen lock** — GPS jitter no longer moves content after lock
-4. **Locked screen view** — when phone looks away from landmark, auto-switch to virtual 3D model; switch back to camera overlay when pointed at it
-5. **Social layer** (vision) — people leave drops at landmarks in a shared database, visible on-site and virtually
+4. **Social layer** (vision) — people leave drops at landmarks in a shared database, visible on-site and virtually
 
 ## Key Files to Know
 

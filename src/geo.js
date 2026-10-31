@@ -10,7 +10,8 @@
 
 import * as THREE from 'three';
 import { FLYOVER, createLandmarkExperience } from './experience.js';
-import { LANDMARKS, landmarkFromUrl } from './landmarks.js';
+import { LANDMARKS, landmarkFromUrl, setupLandmarkPicker } from './landmarks.js';
+import { createQutubMinarModel } from './models/qutub-minar.js';
 
 const SETTINGS = {
   eyeHeight: 1.6,            // metres above the ground the phone is held
@@ -35,11 +36,52 @@ const formatDistance = (metres) => (metres < 1000 ? `${Math.round(metres)} m` : 
 // Heading of a direction in the horizontal plane, counter-clockwise from −Z (the same sense as rotation.y)
 const yawOf = (v) => Math.atan2(-v.x, -v.z);
 
+function createDigitalTwin(lm) {
+  if (lm.model === 'qutub-minar') {
+    return createQutubMinarModel();
+  }
+  const group = new THREE.Group();
+  const rBase = Math.max(5, lm.footprintRadius);
+  const rTop = Math.max(2, rBase * 0.4);
+  const h = lm.height;
+
+  const wireGeo = new THREE.CylinderGeometry(rTop, rBase, h, 20, 8, true);
+  const wireMat = new THREE.MeshBasicMaterial({
+    color: 0x00f0ff,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.45
+  });
+  const wire = new THREE.Mesh(wireGeo, wireMat);
+  wire.position.y = h / 2;
+
+  const coreGeo = new THREE.CylinderGeometry(rTop * 0.96, rBase * 0.96, h, 20, 1, false);
+  const coreMat = new THREE.MeshStandardMaterial({
+    color: 0x081525,
+    roughness: 0.3,
+    metalness: 0.7,
+    transparent: true,
+    opacity: 0.8
+  });
+  const core = new THREE.Mesh(coreGeo, coreMat);
+  core.position.y = h / 2;
+
+  group.add(core, wire);
+  return group;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const video = document.querySelector('#camera-feed');
   const container = document.querySelector('#ar-container');
   const trackingStatus = document.querySelector('#tracking-status');
   const crosshair = document.querySelector('#aim-crosshair');
+  const targetRadarPill = document.querySelector('#target-radar-pill');
+  const radarArrow = document.querySelector('#radar-arrow');
+  const radarLabel = document.querySelector('#radar-label');
+  const viewToggleRow = document.querySelector('#view-toggle-row');
+  const btnViewAuto = document.querySelector('#btn-view-auto');
+  const btnViewCamera = document.querySelector('#btn-view-camera');
+  const btnViewTwin = document.querySelector('#btn-view-twin');
   const kicker = document.querySelector('#geo-kicker');
   const headline = document.querySelector('#geo-headline');
   const subtext = document.querySelector('#geo-subtext');
@@ -47,10 +89,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnAction = document.querySelector('#btn-geo-action');
   const modelCredit = document.querySelector('#model-credit');
   const landmarkTitle = document.querySelector('#landmark-name');
+  const countrySelect = document.querySelector('#country-select');
   const landmarkSelect = document.querySelector('#landmark-select');
   const btnVirtualView = document.querySelector('#btn-virtual-view');
 
   const landmark = landmarkFromUrl();
+
+  let viewMode = 'auto'; // 'auto' | 'camera' | 'twin'
+  let isLookingAway = false;
+
+  const setViewMode = (mode) => {
+    viewMode = mode;
+    btnViewAuto?.classList.toggle('active', mode === 'auto');
+    btnViewCamera?.classList.toggle('active', mode === 'camera');
+    btnViewTwin?.classList.toggle('active', mode === 'twin');
+  };
+
+  btnViewAuto?.addEventListener('click', () => setViewMode('auto'));
+  btnViewCamera?.addEventListener('click', () => setViewMode('camera'));
+  btnViewTwin?.addEventListener('click', () => setViewMode('twin'));
 
   if (landmarkTitle) {
     landmarkTitle.innerText = `${landmark.name} · ${landmark.area}`.toUpperCase();
@@ -60,25 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
     btnVirtualView.href = `./virtual.html?landmark=${encodeURIComponent(landmark.id)}`;
   }
 
-  // Populate landmark picker grouped by region
-  if (landmarkSelect) {
-    const groups = {};
-    for (const item of Object.values(LANDMARKS)) {
-      const groupName = item.region || 'Other';
-      if (!groups[groupName]) {
-        const optgroup = document.createElement('optgroup');
-        optgroup.label = groupName;
-        groups[groupName] = optgroup;
-        landmarkSelect.appendChild(optgroup);
-      }
-      groups[groupName].appendChild(new Option(`${item.name} (${item.area})`, item.id, false, item.id === landmark.id));
-    }
-    landmarkSelect.addEventListener('change', () => {
-      const params = new URLSearchParams(window.location.search);
-      params.set('landmark', landmarkSelect.value);
-      window.location.search = params.toString();
-    });
-  }
+  // Two-tier Country -> Landmark selector
+  setupLandmarkPicker(countrySelect, landmarkSelect, landmark, (chosenId) => {
+    const params = new URLSearchParams(window.location.search);
+    params.set('landmark', chosenId);
+    window.location.search = params.toString();
+  });
 
   headline.innerText = `Stand where you can see ${landmark.name}`;
   subtext.innerText = 'We find you with GPS, then you confirm the structure with one tap.';
@@ -110,6 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const experience = createLandmarkExperience(landmark);
   landmarkGroup.add(experience.group);
+
+  const digitalTwin = createDigitalTwin(landmark);
+  digitalTwin.visible = false;
+  landmarkGroup.add(digitalTwin);
+
   experience.flyover.loaded
     .then(() => { modelCredit.textContent = FLYOVER.credit; })
     .catch((err) => console.warn('Flyover model failed to load.', err));
@@ -218,6 +267,12 @@ document.addEventListener('DOMContentLoaded', () => {
     state = 'aiming';
     calibrated.visible = false;
     crosshair.hidden = false;
+    if (viewToggleRow) viewToggleRow.hidden = true;
+    if (targetRadarPill) targetRadarPill.hidden = true;
+    digitalTwin.visible = false;
+    video.style.opacity = '1';
+    video.style.filter = 'none';
+    scene.background = null;
     setBadge('AIMING', '#ffb800');
     refreshUi();
   };
@@ -229,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
     landmarkGroup.position.copy(landmarkTarget);
     calibrated.visible = true;
     crosshair.hidden = true;
+    if (viewToggleRow) viewToggleRow.hidden = false;
     state = 'locked';
     setBadge('LOCKED', '#00ff88');
     kicker.innerText = 'SPATIAL AIRSPACE UNLOCKED';
@@ -293,7 +349,51 @@ document.addEventListener('DOMContentLoaded', () => {
   renderer.setAnimationLoop((timeMs) => {
     const t = timeMs / 1000;
     if (hasOrientation) camera.quaternion.slerp(deviceQuat, SETTINGS.orientationSmoothing);
-    if (state === 'locked') landmarkGroup.position.lerp(landmarkTarget, SETTINGS.gpsSmoothing);
+    if (state === 'locked') {
+      landmarkGroup.position.lerp(landmarkTarget, SETTINGS.gpsSmoothing);
+
+      // --- Locked screen view: detect when user looks away from the landmark ---
+      const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+      const landmarkWorld = new THREE.Vector3();
+      landmarkGroup.getWorldPosition(landmarkWorld);
+      const toLandmark = landmarkWorld.clone().sub(camera.position).normalize();
+
+      const cosAngle = forward.dot(toLandmark);
+      const angleDeg = THREE.MathUtils.radToDeg(Math.acos(Math.min(1, Math.max(-1, cosAngle))));
+
+      const cross = new THREE.Vector3().crossVectors(forward, toLandmark);
+      const isLeft = cross.y > 0;
+      const arrowSymbol = isLeft ? '←' : '→';
+
+      // Hysteresis: trigger off-target when > 42°, recover when < 30°
+      if (!isLookingAway && angleDeg > 42) {
+        isLookingAway = true;
+      } else if (isLookingAway && angleDeg < 30) {
+        isLookingAway = false;
+      }
+
+      const showTwin = viewMode === 'twin' || (viewMode === 'auto' && isLookingAway);
+
+      if (showTwin) {
+        digitalTwin.visible = true;
+        video.style.opacity = '0.12';
+        video.style.filter = 'blur(6px)';
+        scene.background = new THREE.Color(0x060c18);
+        if (targetRadarPill) {
+          targetRadarPill.hidden = false;
+          if (radarArrow) radarArrow.textContent = arrowSymbol;
+          if (radarLabel) radarLabel.textContent = `3D TWIN · ${arrowSymbol} TURN ${Math.round(angleDeg)}° TO ${landmark.name.toUpperCase()}`;
+        }
+        kicker.innerText = '3D DIGITAL TWIN VIEW';
+      } else {
+        digitalTwin.visible = false;
+        video.style.opacity = '1';
+        video.style.filter = 'none';
+        scene.background = null;
+        if (targetRadarPill) targetRadarPill.hidden = true;
+        kicker.innerText = 'SPATIAL AIRSPACE UNLOCKED';
+      }
+    }
 
     experience.update(t);
 

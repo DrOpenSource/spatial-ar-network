@@ -34,7 +34,9 @@ in metres around the landmark** (`src/experience.js`).
 
 | Phase | Scope |
 |---|---|
-| With the on-site field test | **Verified lock**: combine GPS proximity + camera image match against reference photos + user tap. **Frozen lock**: GPS jitter no longer moves content after lock. **Locked screen view**: when the phone looks away from the landmark, switch automatically to the virtual-mode 3D model with the same animations; switch back to the camera overlay when pointed at it again |
+| Locked Screen View | ✅ **Smart View-Switching**: Built in `geo.html`. Automatically detects when phone looks away (> 42° off-target), dims camera feed and activates 3D digital twin model with live flyover and turn radar (`← TURN 70°`). Snaps back to camera AR when facing the landmark (< 30°). Includes manual mode controls (Auto View / Camera AR / 3D Twin). |
+| Two-Tier Pickers & 3D Audit | ✅ **Country -> Location Dropdowns & 3D Audit**: Two-tier picker on both `virtual.html` and `geo.html`. Audited all 22 landmarks: 16 have real Google Photorealistic 3D Mesh, 6 use 2D satellite terrain or custom procedural 3D models. |
+| With the on-site field test | **Verified lock**: combine GPS proximity + camera image match against reference photos + user tap. **Frozen lock**: GPS jitter no longer moves content after lock. |
 | Registry Expansion | ✅ **Landmark & Brand Hijack Registry (22 locations)**: Expanded registry to 22 global landmarks and urban hotspots across 5 regions. Added regional optgroup pickers to both `virtual.html` and `geo.html`, with two-way deep linking (`?landmark=<id>`). Integrated the 8 action/street-culture brand hijack locations into the GTM Playbook. |
 | Vision | **Social layer**: people leave drops at landmarks in a shared database, visible on-site and virtually |
 

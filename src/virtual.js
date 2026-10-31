@@ -13,7 +13,7 @@ import { TilesRenderer } from '3d-tiles-renderer';
 import { GoogleCloudAuthPlugin } from '3d-tiles-renderer/core/plugins';
 import { GLTFExtensionsPlugin, ReorientationPlugin, TilesFadePlugin } from '3d-tiles-renderer/three/plugins';
 import { FLYOVER, createLandmarkExperience } from './experience.js';
-import { LANDMARKS, landmarkFromUrl } from './landmarks.js';
+import { LANDMARKS, landmarkFromUrl, setupLandmarkPicker } from './landmarks.js';
 import { createQutubMinarModel } from './models/qutub-minar.js';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('#ar-container');
   const trackingStatus = document.querySelector('#tracking-status');
   const landmarkName = document.querySelector('#landmark-name');
+  const countrySelect = document.querySelector('#country-select');
   const landmarkSelect = document.querySelector('#landmark-select');
   const subtext = document.querySelector('#virtual-subtext');
   const btnReset = document.querySelector('#btn-reset-view');
@@ -54,21 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
     btnOnSite.href = `./geo.html?landmark=${encodeURIComponent(landmark.id)}`;
   }
 
-  // Landmark picker grouped by region: reloads the page for the chosen landmark
-  const groups = {};
-  for (const item of Object.values(LANDMARKS)) {
-    const groupName = item.region || 'Other';
-    if (!groups[groupName]) {
-      const optgroup = document.createElement('optgroup');
-      optgroup.label = groupName;
-      groups[groupName] = optgroup;
-      landmarkSelect.appendChild(optgroup);
-    }
-    groups[groupName].appendChild(new Option(`${item.name} (${item.area})`, item.id, false, item.id === landmark.id));
-  }
-  landmarkSelect.addEventListener('change', () => {
+  // Two-tier Country -> Landmark selector
+  setupLandmarkPicker(countrySelect, landmarkSelect, landmark, (chosenId) => {
     const params = new URLSearchParams(window.location.search);
-    params.set('landmark', landmarkSelect.value);
+    params.set('landmark', chosenId);
     window.location.search = params.toString();
   });
 

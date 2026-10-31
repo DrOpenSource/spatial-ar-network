@@ -233,6 +233,83 @@ body, html {
   border-radius: 50%;
 }
 
+/* Off-target radar pill */
+.target-radar-pill {
+  position: absolute;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 14, 23, 0.92);
+  border: 1px solid var(--accent-gold);
+  border-radius: 20px;
+  padding: 6px 14px;
+  box-shadow: 0 4px 16px rgba(255, 184, 0, 0.3);
+  pointer-events: auto;
+  z-index: 15;
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+.target-radar-pill[hidden] {
+  display: none;
+}
+
+.radar-arrow {
+  color: var(--accent-gold);
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.radar-label {
+  color: var(--text-main);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 184, 0, 0.2); }
+  50% { box-shadow: 0 0 18px rgba(255, 184, 0, 0.5); }
+}
+
+/* View toggle pill row */
+.view-toggle-row {
+  display: flex;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 4px;
+  width: 100%;
+}
+
+.view-toggle-row[hidden] {
+  display: none;
+}
+
+.view-toggle-btn {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-toggle-btn.active {
+  background: var(--bg-dark);
+  color: var(--accent-cyan);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+
 .geo-readout {
   font-size: 11px;
   font-variant-numeric: tabular-nums;
@@ -256,20 +333,34 @@ a.btn {
   text-decoration: none;
 }
 
-.landmark-select {
+.landmark-picker-row {
+  display: flex;
+  gap: 8px;
   width: 100%;
+}
+
+.hud-select {
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid var(--border-glass);
   background: rgba(255, 255, 255, 0.08);
   color: var(--text-main);
   font: 600 13px var(--font-family);
+  min-width: 0;
 }
 
-.landmark-select option,
-.landmark-select optgroup {
+.hud-select option,
+.hud-select optgroup {
   background: #0a0e17;
   color: #ffffff;
+}
+
+.country-select {
+  flex: 1.1;
+}
+
+.landmark-select {
+  flex: 1.4;
 }
 
 .map-attribution {
