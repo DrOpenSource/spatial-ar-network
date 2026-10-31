@@ -93,7 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const landmarkSelect = document.querySelector('#landmark-select');
   const btnVirtualView = document.querySelector('#btn-virtual-view');
 
-  const landmark = landmarkFromUrl();
+  let landmark = landmarkFromUrl();
+  let experience = null;
+  let digitalTwin = null;
 
   let viewMode = 'auto'; // 'auto' | 'camera' | 'twin'
   let isLookingAway = false;
@@ -117,11 +119,49 @@ document.addEventListener('DOMContentLoaded', () => {
     btnVirtualView.href = `./virtual.html?landmark=${encodeURIComponent(landmark.id)}`;
   }
 
+  // Seamless in-place landmark switcher without dropping the camera feed
+  const switchLandmark = (chosenId) => {
+    if (!LANDMARKS[chosenId]) return;
+    landmark = LANDMARKS[chosenId];
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('landmark', chosenId);
+    window.history.replaceState(null, '', url.toString());
+
+    if (landmarkTitle) {
+      landmarkTitle.innerText = `${landmark.name} · ${landmark.area}`.toUpperCase();
+    }
+    if (btnVirtualView) {
+      btnVirtualView.href = `./virtual.html?landmark=${encodeURIComponent(landmark.id)}`;
+    }
+
+    landmarkGroup.clear();
+    experience = createLandmarkExperience(landmark);
+    landmarkGroup.add(experience.group);
+
+    digitalTwin = createDigitalTwin(landmark);
+    digitalTwin.visible = false;
+    landmarkGroup.add(digitalTwin);
+
+    experience.flyover.loaded
+      .then(() => { modelCredit.textContent = FLYOVER.credit; })
+      .catch((err) => console.warn('Flyover model failed to load.', err));
+
+    updateTarget();
+    if (state === 'locked') {
+      landmarkGroup.position.copy(landmarkTarget);
+      headline.innerText = `${landmark.name} Flyover`;
+      subtext.innerText = `Drifted off ${landmark.name}? Tap Recalibrate and line it up again.`;
+    } else {
+      headline.innerText = `Stand where you can see ${landmark.name}`;
+      subtext.innerText = 'We find you with GPS, then you confirm the structure with one tap.';
+    }
+    refreshUi();
+  };
+
   // Two-tier Country -> Landmark selector
   setupLandmarkPicker(countrySelect, landmarkSelect, landmark, (chosenId) => {
-    const params = new URLSearchParams(window.location.search);
-    params.set('landmark', chosenId);
-    window.location.search = params.toString();
+    switchLandmark(chosenId);
   });
 
   headline.innerText = `Stand where you can see ${landmark.name}`;
@@ -152,10 +192,10 @@ document.addEventListener('DOMContentLoaded', () => {
   calibrated.add(landmarkGroup);
   scene.add(calibrated);
 
-  const experience = createLandmarkExperience(landmark);
+  experience = createLandmarkExperience(landmark);
   landmarkGroup.add(experience.group);
 
-  const digitalTwin = createDigitalTwin(landmark);
+  digitalTwin = createDigitalTwin(landmark);
   digitalTwin.visible = false;
   landmarkGroup.add(digitalTwin);
 

@@ -45,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnOnSite = document.querySelector('#btn-on-site');
   const modelCredit = document.querySelector('#model-credit');
   const mapAttribution = document.querySelector('#map-attribution');
+  const warpOverlay = document.querySelector('#orbital-warp-overlay');
+  const warpTargetName = document.querySelector('#warp-target-name');
+  const warpTargetCoords = document.querySelector('#warp-target-coords');
 
   const landmark = landmarkFromUrl();
   const viewScale = Math.max(1, landmark.height / REFERENCE_HEIGHT);
@@ -55,12 +58,28 @@ document.addEventListener('DOMContentLoaded', () => {
     btnOnSite.href = `./geo.html?landmark=${encodeURIComponent(landmark.id)}`;
   }
 
-  // Two-tier Country -> Landmark selector
+  // Two-tier Country -> Landmark selector with cinematic orbital warp transition
   setupLandmarkPicker(countrySelect, landmarkSelect, landmark, (chosenId) => {
-    const params = new URLSearchParams(window.location.search);
-    params.set('landmark', chosenId);
-    window.location.search = params.toString();
+    const nextLandmark = LANDMARKS[chosenId];
+    if (warpOverlay && nextLandmark) {
+      warpTargetName.textContent = nextLandmark.name.toUpperCase();
+      warpTargetCoords.textContent = `${nextLandmark.lat.toFixed(4)}° N, ${nextLandmark.lon.toFixed(4)}° E · ${nextLandmark.area.toUpperCase()}`;
+      warpOverlay.classList.add('active');
+      setTimeout(() => {
+        const params = new URLSearchParams(window.location.search);
+        params.set('landmark', chosenId);
+        window.location.search = params.toString();
+      }, 450);
+    } else {
+      const params = new URLSearchParams(window.location.search);
+      params.set('landmark', chosenId);
+      window.location.search = params.toString();
+    }
   });
+
+  if (warpOverlay) {
+    setTimeout(() => warpOverlay.classList.remove('active'), 250);
+  }
 
   const setBadge = (text, color) => {
     trackingStatus.innerText = text;

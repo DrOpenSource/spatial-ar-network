@@ -421,6 +421,10 @@ export function setupLandmarkPicker(countrySelect, landmarkSelect, currentLandma
   const populateLandmarks = (country, selectedId) => {
     landmarkSelect.innerHTML = '';
     const items = Object.values(LANDMARKS).filter((l) => l.country === country);
+    if (!items.some((l) => l.id === selectedId)) {
+      landmarkSelect.add(new Option('— Select Landmark —', '', true, true));
+      landmarkSelect.options[0].disabled = true;
+    }
     for (const item of items) {
       const badge = item.hasGoogle3D ? ' 🌐3D' : item.model ? ' 🏛️3D' : '';
       landmarkSelect.add(new Option(`${item.name}${badge}`, item.id, false, item.id === selectedId));
@@ -429,18 +433,15 @@ export function setupLandmarkPicker(countrySelect, landmarkSelect, currentLandma
 
   populateLandmarks(currentLandmark.country, currentLandmark.id);
 
-  // When Country changes, pick the first landmark in that country and trigger callback
+  // When Country changes, update landmark options in-place WITHOUT reloading the page!
   countrySelect.addEventListener('change', () => {
     const selectedCountry = countrySelect.value;
-    const firstLandmark = Object.values(LANDMARKS).find((l) => l.country === selectedCountry);
-    if (firstLandmark && firstLandmark.id !== currentLandmark.id) {
-      onSelect(firstLandmark.id);
-    }
+    populateLandmarks(selectedCountry, null);
   });
 
   // When Landmark changes, trigger callback
   landmarkSelect.addEventListener('change', () => {
-    if (landmarkSelect.value !== currentLandmark.id) {
+    if (landmarkSelect.value && landmarkSelect.value !== currentLandmark.id) {
       onSelect(landmarkSelect.value);
     }
   });

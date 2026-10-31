@@ -325,6 +325,109 @@ body, html {
   touch-action: none;  /* let OrbitControls own drag and pinch gestures */
 }
 
+/* Orbital Warp Cinematic Teleport Overlay */
+.orbital-warp-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(10, 20, 36, 0.94) 0%, rgba(5, 8, 14, 0.98) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.orbital-warp-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.warp-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 24px;
+}
+
+.warp-reticle {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border: 2px dashed var(--accent-cyan);
+  border-radius: 50%;
+  animation: rotate-warp 5s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.warp-scanner {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--accent-gold);
+  border-radius: 50%;
+  animation: pulse 1s infinite ease-in-out;
+}
+
+@keyframes rotate-warp {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.warp-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+}
+
+.warp-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.warp-coords {
+  font-size: 12px;
+  font-family: monospace;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.warp-bar {
+  width: 180px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.warp-progress {
+  display: block;
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-gold));
+  animation: warp-load 1.2s infinite ease-in-out;
+}
+
+@keyframes warp-load {
+  0% { transform: translateX(-100%); width: 30%; }
+  50% { width: 60%; }
+  100% { transform: translateX(250%); width: 30%; }
+}
+
 #ar-container.virtual-view {
   pointer-events: auto;
 }
