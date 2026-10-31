@@ -69,13 +69,15 @@
 
   <div id="ui-overlay">
     <header class="hud-header">
-      <div class="hud-badge live-indicator">
-        <span class="pulse-dot"></span> VIRTUAL
-      </div>
-      <div class="hud-title" id="landmark-name">QUTUB MINAR</div>
+      <button class="hud-location-chip" id="hud-location-chip" aria-label="Switch Landmark">
+        <span class="location-icon">📍</span>
+        <span class="location-title" id="landmark-name">QUTUB MINAR</span>
+        <span class="location-caret">▾</span>
+      </button>
       <div class="hud-header-actions">
-        <button class="hud-studio-btn" id="btn-studio-toggle" aria-label="Open Spec Studio">⚡ STUDIO</button>
-        <div class="hud-badge" id="tracking-status">LOADING</div>
+        <button class="hud-icon-btn" id="btn-reset-view-header" title="Reset View" aria-label="Reset Camera View">🧭</button>
+        <button class="hud-icon-btn" id="btn-studio-toggle" title="Spec Studio" aria-label="Open Spec Studio">⚙️</button>
+        <div id="tracking-status" style="display: none;"></div>
       </div>
     </header>
 
@@ -89,17 +91,11 @@
         </div>
       </div>
 
-      <div class="cta-content">
-        <span class="cta-kicker" id="cta-kicker">VIRTUAL TOUR</span>
-        <h3 class="cta-headline" id="cta-headline">Colossal Boss Raid</h3>
-        <p class="cta-subtext" id="virtual-subtext">Drag to orbit · pinch or scroll to zoom</p>
-      </div>
-
-      <!-- Quick Action Buttons (Always available in full-screen immersion!) -->
+      <!-- Quick Action Buttons (Always accessible in full-screen immersion!) -->
       <div class="stunt-actions-row">
         <button class="btn btn-stunt" id="btn-stunt-trigger" aria-label="Trigger Interactive Stunt">
           <span class="stunt-icon">⚡</span>
-          <span class="stunt-label" id="stunt-label">TRIGGER BOSS RAID</span>
+          <span class="stunt-label" id="stunt-label">BOSS RAID</span>
         </button>
         <button class="btn btn-capture" id="btn-capture-drop" aria-label="Capture AR Drop" title="Capture AR Drop for TikTok / IG">
           <span class="capture-icon">📸</span>
@@ -109,6 +105,12 @@
 
       <!-- Collapsible Drawer Body -->
       <div class="drawer-collapsible-body" id="drawer-collapsible-body">
+        <div class="cta-content">
+          <span class="cta-kicker" id="cta-kicker">VIRTUAL TOUR</span>
+          <h3 class="cta-headline" id="cta-headline">Colossal Boss Raid</h3>
+          <p class="cta-subtext" id="virtual-subtext">Drag to orbit · pinch or scroll to zoom</p>
+        </div>
+
         <div class="landmark-picker-row">
           <select class="hud-select country-select" id="country-select" aria-label="Choose a country"></select>
           <select class="hud-select landmark-select" id="landmark-select" aria-label="Choose a landmark"></select>

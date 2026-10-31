@@ -47,28 +47,125 @@ body, html {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 20px) 16px;
+  padding: env(safe-area-inset-top, 12px) 12px env(safe-area-inset-bottom, 14px) 12px;
 }
 
-/* Header HUD */
+/* Header HUD - Minimalist Floating Bar */
 .hud-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--bg-dark);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-glass);
-  border-radius: 12px;
-  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
   pointer-events: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: none;
+  gap: 8px;
+  width: 100%;
+}
+
+.hud-location-chip {
+  background: rgba(6, 14, 28, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  padding: 6px 12px 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  max-width: calc(100% - 84px);
+  min-width: 0;
+  transition: all 0.2s ease;
+}
+
+.hud-location-chip:hover {
+  background: rgba(10, 22, 44, 0.9);
+  border-color: var(--accent-cyan);
+}
+
+.location-icon {
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.location-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.location-caret {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 2px;
+  flex-shrink: 0;
 }
 
 .hud-header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.hud-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(6, 14, 28, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.hud-icon-btn:hover {
+  background: rgba(14, 30, 58, 0.95);
+  border-color: var(--accent-cyan);
+  transform: scale(1.05);
+}
+
+.hud-icon-btn:active {
+  transform: scale(0.95);
+}
+
+.hud-status-chip {
+  background: rgba(6, 14, 28, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  padding: 5px 9px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'JetBrains Mono', monospace, sans-serif;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 .hud-studio-btn {
@@ -169,13 +266,13 @@ body, html {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-glass);
-  border-radius: 18px;
-  padding: 10px 16px 14px;
+  border-radius: 16px;
+  padding: 6px 12px 10px;
   pointer-events: auto;
   box-shadow: 0 10px 36px rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
@@ -186,24 +283,24 @@ body, html {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  padding: 2px 0 4px;
+  padding: 2px 0 2px;
   user-select: none;
   -webkit-user-select: none;
   touch-action: pan-y;
 }
 
 .drawer-drag-pill {
-  width: 40px;
-  height: 4px;
+  width: 34px;
+  height: 3px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.35);
-  margin-bottom: 6px;
+  margin-bottom: 3px;
   transition: background 0.2s ease, width 0.2s ease;
 }
 
 .drawer-handle-bar:hover .drawer-drag-pill {
   background: var(--accent-cyan);
-  width: 48px;
+  width: 44px;
 }
 
 .drawer-handle-row {
@@ -212,17 +309,17 @@ body, html {
   width: 100%;
   align-items: center;
   font-family: 'JetBrains Mono', monospace, sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.1em;
+  font-size: 9px;
+  letter-spacing: 0.08em;
   color: var(--text-muted);
 }
 
 .drawer-handle-title {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.6);
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .drawer-handle-toggle {
@@ -234,7 +331,7 @@ body, html {
 .drawer-collapsible-body {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   max-height: 480px;
   opacity: 1;
   overflow: hidden;
@@ -243,9 +340,9 @@ body, html {
 
 /* Collapsed Drawer State */
 .hud-footer.is-collapsed {
-  padding: 8px 14px 10px;
-  gap: 6px;
-  background: rgba(8, 14, 26, 0.9);
+  padding: 4px 10px 8px;
+  gap: 5px;
+  background: rgba(6, 14, 28, 0.88);
 }
 
 .hud-footer.is-collapsed .drawer-collapsible-body {
@@ -253,18 +350,6 @@ body, html {
   opacity: 0;
   margin: 0;
   pointer-events: none;
-}
-
-.hud-footer.is-collapsed .cta-subtext {
-  display: none;
-}
-
-.hud-footer.is-collapsed .cta-content {
-  margin-bottom: 2px;
-}
-
-.hud-footer.is-collapsed .cta-headline {
-  font-size: 15px;
 }
 
 .cta-kicker {
@@ -790,14 +875,15 @@ a.btn {
 /* Stunt & Viral Drop Actions Row */
 .stunt-actions-row {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
 }
 
 .btn-stunt {
-  flex: 2.2;
+  flex: 2;
   background: linear-gradient(135deg, #0070d1 0%, #00f0ff 100%);
   color: #ffffff;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
   box-shadow: 0 4px 18px rgba(0, 112, 209, 0.45);
@@ -805,8 +891,9 @@ a.btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 11px 14px;
+  gap: 5px;
+  padding: 8px 12px;
+  border-radius: 10px;
 }
 
 .btn-stunt:hover {
@@ -822,12 +909,14 @@ a.btn {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid var(--border-glass);
   color: #ffffff;
+  font-size: 11px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 11px 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
 }
 
 .btn-capture:hover {

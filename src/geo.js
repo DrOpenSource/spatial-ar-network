@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let assetConfig = getActiveAssetConfig(landmark);
   let experience = null;
   let digitalTwin = null;
+  let toggleFooter = null;
 
   let viewMode = 'auto'; // 'auto' | 'camera' | 'twin'
   let isLookingAway = false;
@@ -230,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(() => { modelCredit.textContent = experience.assetConfig.credit; })
         .catch((err) => console.warn('Flyover model failed to load.', err));
       if (stuntLabel && experience.assetConfig.actionLabel) {
-        stuntLabel.textContent = experience.assetConfig.actionLabel;
+        stuntLabel.textContent = experience.assetConfig.actionLabel.replace(/^TRIGGER\s+/i, '');
       }
     }
   });
@@ -241,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnCapture = document.querySelector('#btn-capture-drop');
 
   if (stuntLabel && assetConfig.actionLabel) {
-    stuntLabel.textContent = assetConfig.actionLabel;
+    stuntLabel.textContent = assetConfig.actionLabel.replace(/^TRIGGER\s+/i, '');
   }
 
   if (btnStunt) {
@@ -301,10 +302,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const footerDrawer = document.querySelector('#hud-footer');
   const footerCollapseBtn = document.querySelector('#footer-collapse-btn');
   const drawerToggleLabel = document.querySelector('#drawer-toggle-label');
+  const locationChip = document.querySelector('#hud-location-chip');
 
   if (footerDrawer && footerCollapseBtn) {
     let isCollapsed = false;
-    const toggleFooter = (forceState) => {
+    toggleFooter = (forceState) => {
       isCollapsed = typeof forceState === 'boolean' ? forceState : !isCollapsed;
       footerDrawer.classList.toggle('is-collapsed', isCollapsed);
       footerCollapseBtn.setAttribute('aria-expanded', String(!isCollapsed));
@@ -317,6 +319,12 @@ document.addEventListener('DOMContentLoaded', () => {
       e.stopPropagation();
       toggleFooter();
     });
+
+    if (locationChip) {
+      locationChip.addEventListener('click', () => {
+        toggleFooter(false);
+      });
+    }
 
     let touchStartY = 0;
     footerCollapseBtn.addEventListener('touchstart', (e) => {
@@ -462,6 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
     headline.innerText = `${landmark.name} Flyover`;
     subtext.innerText = `Drifted off ${landmark.name}? Tap Recalibrate and line it up again.`;
     btnAction.innerText = 'Recalibrate';
+    if (toggleFooter) toggleFooter(true);
   };
 
   const start = async () => {

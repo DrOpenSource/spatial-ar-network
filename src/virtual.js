@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const stuntLabel = document.querySelector('#stunt-label');
     if (stuntLabel && assetConfig.actionLabel) {
-      stuntLabel.textContent = assetConfig.actionLabel;
+      stuntLabel.textContent = assetConfig.actionLabel.replace(/^TRIGGER\s+/i, '');
     }
 
     // Spec Studio hot reload
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
           headlineEl.textContent = experience.assetConfig.headline;
         }
         if (stuntLabel && experience.assetConfig.actionLabel) {
-          stuntLabel.textContent = experience.assetConfig.actionLabel;
+          stuntLabel.textContent = experience.assetConfig.actionLabel.replace(/^TRIGGER\s+/i, '');
         }
       }
     });
@@ -366,10 +366,18 @@ document.addEventListener('DOMContentLoaded', () => {
     triggerSatelliteDescent(activeLandmark, true);
   });
 
+  const btnResetHeader = document.querySelector('#btn-reset-view-header');
+  if (btnResetHeader) {
+    btnResetHeader.addEventListener('click', () => {
+      triggerSatelliteDescent(activeLandmark, true);
+    });
+  }
+
   // --- Collapsible Footer Controls Drawer ---
   const footerDrawer = document.querySelector('#hud-footer');
   const footerCollapseBtn = document.querySelector('#footer-collapse-btn');
   const drawerToggleLabel = document.querySelector('#drawer-toggle-label');
+  const locationChip = document.querySelector('#hud-location-chip');
 
   if (footerDrawer && footerCollapseBtn) {
     let isCollapsed = false;
@@ -386,6 +394,13 @@ document.addEventListener('DOMContentLoaded', () => {
       e.stopPropagation();
       toggleFooter();
     });
+
+    if (locationChip) {
+      locationChip.addEventListener('click', () => {
+        // Tapping location pill opens the drawer so user can switch landmarks
+        toggleFooter(false);
+      });
+    }
 
     // Touch swipe down on handle collapses, swipe up expands
     let touchStartY = 0;

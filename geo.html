@@ -13,13 +13,14 @@
 
   <div id="ui-overlay">
     <header class="hud-header">
-      <div class="hud-badge live-indicator">
-        <span class="pulse-dot"></span> ON-SITE AR
-      </div>
-      <div class="hud-title" id="landmark-name">QUTUB MINAR · MEHRAULI</div>
+      <button class="hud-location-chip" id="hud-location-chip" aria-label="Switch Landmark">
+        <span class="location-icon">📍</span>
+        <span class="location-title" id="landmark-name">QUTUB MINAR · MEHRAULI</span>
+        <span class="location-caret">▾</span>
+      </button>
       <div class="hud-header-actions">
-        <button class="hud-studio-btn" id="btn-studio-toggle" aria-label="Open Spec Studio">⚡ STUDIO</button>
-        <div class="hud-badge" id="tracking-status">READY</div>
+        <div class="hud-status-chip" id="tracking-status">READY</div>
+        <button class="hud-icon-btn" id="btn-studio-toggle" title="Spec Studio" aria-label="Open Spec Studio">⚙️</button>
       </div>
     </header>
 
@@ -44,16 +45,10 @@
         </div>
       </div>
 
-      <div class="cta-content">
-        <span class="cta-kicker" id="geo-kicker">GPS LANDMARK LOCK</span>
-        <h3 class="cta-headline" id="geo-headline">Stand where you can see the landmark</h3>
-        <p class="cta-subtext" id="geo-subtext">We find you with GPS, then you confirm the structure with one tap.</p>
-      </div>
-
-      <div class="stunt-actions-row">
+      <div class="stunt-actions-row" id="stunt-actions-row">
         <button class="btn btn-stunt" id="btn-stunt-trigger" aria-label="Trigger Interactive Stunt">
           <span class="stunt-icon">⚡</span>
-          <span class="stunt-label" id="stunt-label">TRIGGER BOSS RAID</span>
+          <span class="stunt-label" id="stunt-label">BOSS RAID</span>
         </button>
         <button class="btn btn-capture" id="btn-capture-drop" aria-label="Capture AR Drop" title="Capture AR Drop for TikTok / IG">
           <span class="capture-icon">📸</span>
@@ -62,6 +57,12 @@
       </div>
 
       <div class="drawer-collapsible-body" id="drawer-collapsible-body">
+        <div class="cta-content">
+          <span class="cta-kicker" id="geo-kicker">GPS LANDMARK LOCK</span>
+          <h3 class="cta-headline" id="geo-headline">Stand where you can see the landmark</h3>
+          <p class="cta-subtext" id="geo-subtext">We find you with GPS, then you confirm the structure with one tap.</p>
+        </div>
+
         <!-- View switcher: appears once locked on landmark -->
         <div class="view-toggle-row" id="view-toggle-row" hidden>
           <button class="view-toggle-btn active" id="btn-view-auto">Auto View</button>
