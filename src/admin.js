@@ -8,12 +8,13 @@ import { ASSET_CATALOG, DEFAULT_ASSET_ID } from './assets.js';
 
 const STORAGE_KEY_PREFIX = 'spatial_ar_studio_';
 
-export const BRAND_PRESETS = [
-  { name: 'Cyan Electric', primary: '#00f0ff', accent: '#ffb800' },
-  { name: 'Red Bull Racing', primary: '#ff1844', accent: '#ffcc00' },
-  { name: 'Nike Infrared', primary: '#00f0ff', accent: '#ff4800' },
-  { name: 'PlayStation Neon', primary: '#9d4edd', accent: '#00f5d4' },
-  { name: 'Gold Luxury', primary: '#ffd700', accent: '#ffffff' }
+export const SPATIAL_THEMES = [
+  { name: 'Electric Cyan', primary: '#00f0ff', accent: '#ffb800' },
+  { name: 'Laser Crimson', primary: '#ff2255', accent: '#ffb800' },
+  { name: 'Emerald Radar', primary: '#00ff88', accent: '#00f0ff' },
+  { name: 'Solar Amber', primary: '#ffb800', accent: '#ff3300' },
+  { name: 'Plasma Violet', primary: '#b84dff', accent: '#00f0ff' },
+  { name: 'Ghost White', primary: '#ffffff', accent: '#00f0ff' }
 ];
 
 export function getActiveAssetConfig(landmark) {
@@ -112,21 +113,21 @@ export function initAdminStudio({ landmark, onChange }) {
   if (assetSelect) {
     assetSelect.innerHTML = '';
     for (const asset of Object.values(ASSET_CATALOG)) {
-      assetSelect.add(new Option(`${asset.name} (${asset.brand})`, asset.id, false, asset.id === current.assetId));
+      assetSelect.add(new Option(`${asset.name} (${asset.category})`, asset.id, false, asset.id === current.assetId));
     }
   }
 
-  // Populate Presets
+  // Populate Asset-Agnostic Spatial Color Themes
   if (presetContainer) {
     presetContainer.innerHTML = '';
-    BRAND_PRESETS.forEach((preset) => {
+    SPATIAL_THEMES.forEach((theme) => {
       const pill = document.createElement('button');
       pill.type = 'button';
       pill.className = 'studio-preset-pill';
-      pill.innerHTML = `<span class="preset-dot" style="background:${preset.primary}"></span>${preset.name}`;
+      pill.innerHTML = `<span class="preset-dot" style="background:${theme.primary}"></span>${theme.name}`;
       pill.addEventListener('click', () => {
-        primaryInput.value = preset.primary;
-        accentInput.value = preset.accent;
+        primaryInput.value = theme.primary;
+        accentInput.value = theme.accent;
         applyChanges();
       });
       presetContainer.appendChild(pill);

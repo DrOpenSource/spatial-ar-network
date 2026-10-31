@@ -34,29 +34,54 @@ export function createLandmarkExperience(landmark, options = {}) {
   const primaryColor = options.primaryColor ?? assetConfig.primaryColor;
   const accentColor = options.accentColor ?? assetConfig.accentColor;
 
-  // Base ring + crown halo bracket the real structure, which makes any misalignment obvious
+  // Base ring + ground radar bracket the real structure
   const baseRing = new THREE.Mesh(
-    new THREE.TorusGeometry(landmark.footprintRadius + 3, 0.6 * scale, 8, 64),
-    new THREE.MeshBasicMaterial({ color: primaryColor, transparent: true, opacity: 0.6 })
+    new THREE.TorusGeometry(landmark.footprintRadius + 3, 0.8 * scale, 12, 64),
+    new THREE.MeshBasicMaterial({ color: primaryColor, transparent: true, opacity: 0.85 })
   );
   baseRing.rotation.x = Math.PI / 2;
   baseRing.position.y = 0.5;
   group.add(baseRing);
 
+  const groundRadar = new THREE.Mesh(
+    new THREE.RingGeometry(landmark.footprintRadius + 1, landmark.footprintRadius + 7 * scale, 48),
+    new THREE.MeshBasicMaterial({ color: primaryColor, transparent: true, opacity: 0.25, side: THREE.DoubleSide })
+  );
+  groundRadar.rotation.x = -Math.PI / 2;
+  groundRadar.position.y = 0.2;
+  group.add(groundRadar);
+
+  // Crown halo & intense vertical sky beacon
   const crown = new THREE.Group();
   crown.position.y = landmark.height + 3 * scale;
+
   const halo = new THREE.Mesh(
-    new THREE.TorusGeometry(9 * scale, 0.9 * scale, 12, 64),
-    new THREE.MeshBasicMaterial({ color: accentColor, transparent: true, opacity: 0.9 })
+    new THREE.TorusGeometry(10 * scale, 1.2 * scale, 16, 64),
+    new THREE.MeshBasicMaterial({ color: accentColor, transparent: true, opacity: 0.95 })
   );
   halo.rotation.x = Math.PI / 2;
+
   const outerRing = new THREE.Mesh(
-    new THREE.TorusGeometry(14 * scale, 0.5 * scale, 8, 64),
-    new THREE.MeshBasicMaterial({ color: primaryColor, transparent: true, opacity: 0.7 })
+    new THREE.TorusGeometry(15 * scale, 0.7 * scale, 12, 64),
+    new THREE.MeshBasicMaterial({ color: primaryColor, transparent: true, opacity: 0.85 })
   );
-  outerRing.rotation.x = Math.PI / 2 + 0.3;
-  const beacon = new THREE.Mesh(
-    new THREE.CylinderGeometry(1.5 * scale, 1.5 * scale, 300 * scale, 16, 1, true),
+  outerRing.rotation.x = Math.PI / 2 + 0.35;
+
+  // Dual-layer sky beacon: Inner dense core + outer atmospheric cylinder
+  const innerBeacon = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.6 * scale, 1.6 * scale, 450 * scale, 16, 1, true),
+    new THREE.MeshBasicMaterial({
+      color: primaryColor,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    })
+  );
+  innerBeacon.position.y = 225 * scale;
+
+  const outerBeacon = new THREE.Mesh(
+    new THREE.CylinderGeometry(5.0 * scale, 7.5 * scale, 450 * scale, 16, 1, true),
     new THREE.MeshBasicMaterial({
       color: primaryColor,
       transparent: true,
@@ -65,8 +90,9 @@ export function createLandmarkExperience(landmark, options = {}) {
       depthWrite: false
     })
   );
-  beacon.position.y = 150 * scale;
-  crown.add(halo, outerRing, beacon);
+  outerBeacon.position.y = 225 * scale;
+
+  crown.add(halo, outerRing, innerBeacon, outerBeacon);
   group.add(crown);
 
   const speed = (assetConfig.speed ?? FLYOVER.speed) * (options.speedMultiplier ?? 1.0);
